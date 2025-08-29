@@ -269,6 +269,9 @@
         const authError = document.getElementById('auth-error');
         const showRegisterBtn = document.getElementById('show-register-btn');
         const showLoginBtn = document.getElementById('show-login-btn');
+        const authTitle = document.getElementById('auth-title');
+        const loginPrompt = document.getElementById('login-prompt');
+        const registerPrompt = document.getElementById('register-prompt');
         const authButtons = document.querySelectorAll('.auth-btn');
 
         const popupModal = document.getElementById('popup-modal');
@@ -371,9 +374,11 @@
         });
         const toggleAuthForms = (show) => {
             authError.classList.add('hidden');
-            loginForm.classList.toggle('hidden', show === 'register'); registerForm.classList.toggle('hidden', show !== 'register');
+            loginForm.classList.toggle('hidden', show === 'register'); 
+            registerForm.classList.toggle('hidden', show !== 'register');
             authTitle.textContent = show === 'register' ? "Buat Akun Baru" : "Login ke Akun Anda";
-            loginPrompt.classList.toggle('hidden', show === 'register'); registerPrompt.classList.toggle('hidden', show !== 'register');
+            loginPrompt.classList.toggle('hidden', show === 'register'); 
+            registerPrompt.classList.toggle('hidden', show !== 'register');
         };
         const listenToTransactions = () => {
             if (!currentUser) return;
