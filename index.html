@@ -590,15 +590,47 @@
             });
             feather.replace();
         };
-        const generatePDF = () => { /* ... unchanged ... */ 
-            const { jsPDF } = window.jspdf; const content = document.getElementById('laporan-content');
+        const generatePDF = () => {
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('laporan-content');
             const bulan = document.getElementById('laporan-bulan').options[document.getElementById('laporan-bulan').selectedIndex].text;
             const tahun = document.getElementById('laporan-tahun').value;
-            showToast('Mencetak PDF...', false);
-            html2canvas(content, { scale: 2 }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png'); const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight); pdf.save(`laporan-keuangan-${bulan}-${tahun}.pdf`);
+            
+            showPopup({ 
+                title: 'Mempersiapkan PDF...', 
+                message: 'Mohon tunggu, laporan sedang dibuat.', 
+                icon: 'loading' 
+            });
+
+            html2canvas(content, { 
+                scale: 2,
+                onclone: (document) => {
+                    // Hide action buttons during PDF generation
+                    document.querySelectorAll('#laporan-tabel button').forEach(btn => btn.style.display = 'none');
+                }
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight - 20); // Add some margins
+                pdf.save(`laporan-keuangan-${bulan}-${tahun}.pdf`);
+                
+                showPopup({
+                    title: 'PDF Siap!',
+                    message: 'Laporan Anda telah berhasil diunduh.',
+                    icon: 'success',
+                    buttons: [{ text: 'OK' }]
+                });
+            }).catch(err => {
+                console.error("PDF generation error:", err);
+                showPopup({
+                    title: 'Gagal',
+                    message: 'Terjadi kesalahan saat membuat PDF.',
+                    icon: 'error',
+                    buttons: [{ text: 'Tutup' }]
+                });
             });
         };
         window.generatePDF = generatePDF;
