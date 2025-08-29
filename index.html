@@ -38,6 +38,7 @@
         .chart-nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .loader { border-top-color: #4f46e5; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .auth-btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -58,21 +59,22 @@
             <!-- Login Form -->
             <form id="login-form" class="space-y-4">
                 <div>
-                    <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1 text-left">Email</label>
-                    <input type="email" id="login-email" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm">
+                    <label for="login-identifier" class="block text-sm font-medium text-gray-700 mb-1 text-left">Username atau Email</label>
+                    <input type="text" id="login-identifier" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm">
                 </div>
                 <div>
                     <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1 text-left">Password</label>
                     <input type="password" id="login-password" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm">
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">Login</button>
+                <button type="submit" class="auth-btn w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">Login</button>
             </form>
 
             <!-- Register Form -->
             <form id="register-form" class="space-y-4 hidden">
                  <div>
-                    <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1 text-left">Nama</label>
-                    <input type="text" id="register-name" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm">
+                    <label for="register-username" class="block text-sm font-medium text-gray-700 mb-1 text-left">Username</label>
+                    <input type="text" id="register-username" required pattern="^[a-zA-Z0-9_]{3,15}$" title="3-15 karakter, hanya huruf, angka, dan underscore (_)" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm">
+                    <p class="text-xs text-gray-500 mt-1">Hanya huruf, angka, dan underscore (_). Tanpa spasi.</p>
                 </div>
                 <div>
                     <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1 text-left">Email</label>
@@ -82,7 +84,7 @@
                     <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1 text-left">Password (min. 6 karakter)</label>
                     <input type="password" id="register-password" required minlength="6" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm">
                 </div>
-                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">Daftar</button>
+                <button type="submit" class="auth-btn w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">Daftar</button>
             </form>
 
             <p class="text-center text-sm text-gray-600 mt-6">
@@ -92,10 +94,8 @@
         </div>
     </div>
 
-    <!-- App Container -->
+    <!-- App Container (rest of the HTML is the same as before) -->
     <div id="app-container" class="hidden container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl">
-
-        <!-- Header and Navigation -->
         <header class="bg-white/80 backdrop-blur-lg shadow-sm rounded-xl p-3 sm:p-4 mb-6 flex justify-between items-center sticky top-4 z-10 border border-gray-200/80">
             <div class="flex items-center space-x-3">
                 <div id="user-initial" class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-sm"></div>
@@ -121,39 +121,27 @@
         </header>
 
         <main>
-            <!-- Beranda / Dashboard Page -->
             <div id="beranda-page" class="page">
-                <!-- Cards, Chart, Recent Transactions sections are the same as before -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200/80 transition-transform hover:scale-[1.02] duration-300">
                         <div class="flex items-center space-x-4">
                             <div class="p-3 bg-green-100 rounded-full"><i data-feather="arrow-down-circle" class="text-green-600"></i></div>
-                            <div>
-                                <p class="text-sm text-gray-500">Total Pemasukan</p>
-                                <p id="total-pemasukan" class="text-2xl font-bold text-gray-800">Rp 0</p>
-                            </div>
+                            <div><p class="text-sm text-gray-500">Total Pemasukan</p><p id="total-pemasukan" class="text-2xl font-bold text-gray-800">Rp 0</p></div>
                         </div>
                     </div>
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200/80 transition-transform hover:scale-[1.02] duration-300">
                         <div class="flex items-center space-x-4">
                             <div class="p-3 bg-red-100 rounded-full"><i data-feather="arrow-up-circle" class="text-red-600"></i></div>
-                            <div>
-                                <p class="text-sm text-gray-500">Total Pengeluaran</p>
-                                <p id="total-pengeluaran" class="text-2xl font-bold text-gray-800">Rp 0</p>
-                            </div>
+                            <div><p class="text-sm text-gray-500">Total Pengeluaran</p><p id="total-pengeluaran" class="text-2xl font-bold text-gray-800">Rp 0</p></div>
                         </div>
                     </div>
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200/80 transition-transform hover:scale-[1.02] duration-300 md:col-span-2 lg:col-span-1">
                         <div class="flex items-center space-x-4">
                             <div class="p-3 bg-indigo-100 rounded-full"><i data-feather="briefcase" class="text-indigo-600"></i></div>
-                            <div>
-                                <p class="text-sm text-gray-500">Saldo Saat Ini</p>
-                                <p id="saldo-saat-ini" class="text-2xl font-bold text-gray-800">Rp 0</p>
-                            </div>
+                            <div><p class="text-sm text-gray-500">Saldo Saat Ini</p><p id="saldo-saat-ini" class="text-2xl font-bold text-gray-800">Rp 0</p></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold">Grafik Keuangan Bulanan</h2>
@@ -164,24 +152,17 @@
                     </div>
                     <div class="relative h-80"><canvas id="financialChart"></canvas></div>
                 </div>
-
                 <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80">
                     <h2 class="text-lg font-bold mb-4">Transaksi Terakhir</h2>
-                    <div id="recent-transactions-list" class="space-y-3">
-                        <p class="text-gray-500 text-center py-4">Belum ada transaksi.</p>
-                    </div>
+                    <div id="recent-transactions-list" class="space-y-3"><p class="text-gray-500 text-center py-4">Belum ada transaksi.</p></div>
                 </div>
             </div>
-
-            <!-- Input Data Page -->
             <div id="input-page" class="page hidden">
-                 <!-- The Input forms remain structurally the same -->
                  <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80">
                     <div class="flex border-b border-gray-200 mb-6">
                         <button id="pemasukan-tab" onclick="switchForm('pemasukan')" class="input-tab py-2 px-4 font-semibold border-b-2 border-transparent">Pemasukan</button>
                         <button id="pengeluaran-tab" onclick="switchForm('pengeluaran')" class="input-tab py-2 px-4 font-semibold border-b-2 border-transparent text-gray-500">Pengeluaran</button>
                     </div>
-                    
                     <form id="form-pemasukan" class="space-y-5">
                         <h2 class="text-lg font-bold text-green-600">Formulir Uang Masuk</h2>
                         <div><label for="pemasukan-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="pemasukan-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
@@ -195,7 +176,6 @@
                             <div id="pemasukan-loader" class="loader w-5 h-5 rounded-full border-2 border-white/50 hidden"></div>
                         </button>
                     </form>
-                    
                     <form id="form-pengeluaran" class="space-y-5 hidden">
                         <h2 class="text-lg font-bold text-red-600">Formulir Uang Keluar</h2>
                         <div><label for="pengeluaran-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="pengeluaran-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
@@ -207,10 +187,7 @@
                     </form>
                 </div>
             </div>
-
-            <!-- Laporan Page -->
             <div id="laporan-page" class="page hidden">
-                <!-- The Report page remains structurally the same -->
                  <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                         <h2 class="text-lg font-bold">Laporan Bulanan</h2>
@@ -236,7 +213,6 @@
                 </div>
             </div>
         </main>
-        
     </div>
 
     <!-- Toast & Modal -->
@@ -254,7 +230,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, Timestamp, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
         // --- CONFIGURATION ---
         const firebaseConfig = {
@@ -265,7 +241,6 @@
             messagingSenderId: "875708784907",
             appId: "1:875708784907:web:9565bac8cb2783170b820e"
         };
-        
         const CLOUDINARY_CLOUD_NAME = 'dtvmbvwtx';
         const CLOUDINARY_UPLOAD_PRESET = 'dompet';
 
@@ -293,35 +268,82 @@
         const authTitle = document.getElementById('auth-title');
         const loginPrompt = document.getElementById('login-prompt');
         const registerPrompt = document.getElementById('register-prompt');
-
+        const authButtons = document.querySelectorAll('.auth-btn');
 
         // --- AUTHENTICATION ---
-        const handleLogin = (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            signInWithEmailAndPassword(auth, email, password)
-                .catch(handleAuthError);
+        const setAuthButtonsLoading = (isLoading) => {
+            authButtons.forEach(btn => btn.disabled = isLoading);
         };
 
-        const handleRegister = (e) => {
+        const handleLogin = async (e) => {
             e.preventDefault();
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
+            setAuthButtonsLoading(true);
+            const identifier = document.getElementById('login-identifier').value.trim();
+            const password = document.getElementById('login-password').value;
+            let email = identifier;
+
+            // Check if identifier is a username or an email
+            if (!identifier.includes('@')) {
+                try {
+                    const usernameDocRef = doc(db, "usernames", identifier.toLowerCase());
+                    const usernameDoc = await getDoc(usernameDocRef);
+                    if (usernameDoc.exists()) {
+                        email = usernameDoc.data().email;
+                    } else {
+                        handleAuthError({ code: 'auth/user-not-found' });
+                        setAuthButtonsLoading(false);
+                        return;
+                    }
+                } catch (error) {
+                    handleAuthError({}); // Generic error
+                    setAuthButtonsLoading(false);
+                    return;
+                }
+            }
+
+            signInWithEmailAndPassword(auth, email, password)
+                .catch(handleAuthError)
+                .finally(() => setAuthButtonsLoading(false));
+        };
+
+        const handleRegister = async (e) => {
+            e.preventDefault();
+            setAuthButtonsLoading(true);
+            const username = document.getElementById('register-username').value.trim().toLowerCase();
+            const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value;
+
+            // Check if username already exists
+            const usernameDocRef = doc(db, "usernames", username);
+            const usernameDoc = await getDoc(usernameDocRef);
+
+            if (usernameDoc.exists()) {
+                handleAuthError({ code: 'auth/username-already-in-use' });
+                setAuthButtonsLoading(false);
+                return;
+            }
+
+            // If username is free, create user
             createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    return updateProfile(userCredential.user, { displayName: name });
+                .then(async (userCredential) => {
+                    // Update profile and create username document
+                    await updateProfile(userCredential.user, { displayName: username });
+                    await setDoc(doc(db, "usernames", username), {
+                        uid: userCredential.user.uid,
+                        email: email
+                    });
                 })
-                .catch(handleAuthError);
+                .catch(handleAuthError)
+                .finally(() => setAuthButtonsLoading(false));
         };
         
         const handleAuthError = (error) => {
             let message = "Terjadi kesalahan. Silakan coba lagi.";
             switch (error.code) {
-                case 'auth/user-not-found': message = "Email tidak terdaftar."; break;
+                case 'auth/user-not-found': message = "Username atau email tidak terdaftar."; break;
                 case 'auth/wrong-password': message = "Password salah."; break;
                 case 'auth/email-already-in-use': message = "Email ini sudah terdaftar."; break;
+                case 'auth/username-already-in-use': message = "Username ini sudah digunakan."; break;
                 case 'auth/weak-password': message = "Password terlalu lemah (minimal 6 karakter)."; break;
                 case 'auth/invalid-email': message = "Format email tidak valid."; break;
             }
@@ -329,23 +351,18 @@
             authError.classList.remove('hidden');
         };
 
-        const logOut = () => {
-            signOut(auth).catch(error => console.error("Logout Gagal:", error));
-        };
+        const logOut = () => signOut(auth).catch(error => console.error("Logout Gagal:", error));
 
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
                 loginPage.classList.add('hidden');
                 appContainer.classList.remove('hidden');
-
                 const userName = user.displayName || user.email;
-                const userInitial = document.getElementById('user-initial');
                 document.getElementById('user-name').textContent = userName;
                 if (userName) {
-                    userInitial.textContent = userName.charAt(0).toUpperCase();
+                    document.getElementById('user-initial').textContent = userName.charAt(0).toUpperCase();
                 }
-
                 listenToTransactions();
                 initializeUI();
             } else {
@@ -359,14 +376,14 @@
         });
 
         const toggleAuthForms = (show) => {
-            authError.classList.add('hidden'); // Hide error on toggle
+            authError.classList.add('hidden');
             if (show === 'register') {
                 loginForm.classList.add('hidden');
                 registerForm.classList.remove('hidden');
                 authTitle.textContent = "Buat Akun Baru";
                 loginPrompt.classList.add('hidden');
                 registerPrompt.classList.remove('hidden');
-            } else { // 'login'
+            } else {
                 loginForm.classList.remove('hidden');
                 registerForm.classList.add('hidden');
                 authTitle.textContent = "Login ke Akun Anda";
@@ -376,12 +393,10 @@
         };
         
         // --- DATA HANDLING (FIRESTORE & CLOUDINARY) ---
-        // ... (The rest of the script is identical to the previous version) ...
         const listenToTransactions = () => {
             if (!currentUser) return;
             const transactionsCol = collection(db, 'users', currentUser.uid, 'transactions');
             const q = query(transactionsCol, orderBy('tanggal', 'desc'));
-
             unsubscribeFromFirestore = onSnapshot(q, (querySnapshot) => {
                 transactions = [];
                 querySnapshot.forEach((doc) => {
@@ -431,7 +446,6 @@
         logoutBtn.addEventListener('click', logOut);
         showRegisterBtn.addEventListener('click', () => toggleAuthForms('register'));
         showLoginBtn.addEventListener('click', () => toggleAuthForms('login'));
-
         document.getElementById('form-pemasukan').addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -445,41 +459,26 @@
             if (fotoInput.files && fotoInput.files[0]) {
                 fotoUrl = await uploadToCloudinary(fotoInput.files[0]);
                 if (!fotoUrl) {
-                    submitBtn.disabled = false;
-                    btnText.classList.remove('hidden');
-                    loader.classList.add('hidden');
-                    return;
+                    submitBtn.disabled = false; btnText.classList.remove('hidden'); loader.classList.add('hidden'); return;
                 }
             }
             await addTransaction({
-                type: 'pemasukan',
-                tanggal: document.getElementById('pemasukan-tanggal').value,
-                jumlah: parseFloat(document.getElementById('pemasukan-jumlah').value),
-                keterangan: document.getElementById('pemasukan-keterangan').value,
-                oleh: document.getElementById('pemasukan-oleh').value,
-                disimpanDi: document.getElementById('pemasukan-disimpan').value,
-                foto: fotoUrl,
+                type: 'pemasukan', tanggal: document.getElementById('pemasukan-tanggal').value, jumlah: parseFloat(document.getElementById('pemasukan-jumlah').value),
+                keterangan: document.getElementById('pemasukan-keterangan').value, oleh: document.getElementById('pemasukan-oleh').value, disimpanDi: document.getElementById('pemasukan-disimpan').value, foto: fotoUrl,
             });
-            e.target.reset();
-            document.getElementById('pemasukan-preview').classList.add('hidden');
-            submitBtn.disabled = false;
-            btnText.classList.remove('hidden');
-            loader.classList.add('hidden');
+            e.target.reset(); document.getElementById('pemasukan-preview').classList.add('hidden');
+            submitBtn.disabled = false; btnText.classList.remove('hidden'); loader.classList.add('hidden');
         });
-        
         document.getElementById('form-pengeluaran').addEventListener('submit', async (e) => {
             e.preventDefault();
             await addTransaction({
-                type: 'pengeluaran',
-                tanggal: document.getElementById('pengeluaran-tanggal').value,
-                jumlah: parseFloat(document.getElementById('pengeluaran-jumlah').value),
-                keterangan: document.getElementById('pengeluaran-keterangan').value,
-                kategori: document.getElementById('pengeluaran-kategori').value,
-                oleh: document.getElementById('pengeluaran-oleh').value,
+                type: 'pengeluaran', tanggal: document.getElementById('pengeluaran-tanggal').value, jumlah: parseFloat(document.getElementById('pengeluaran-jumlah').value),
+                keterangan: document.getElementById('pengeluaran-keterangan').value, kategori: document.getElementById('pengeluaran-kategori').value, oleh: document.getElementById('pengeluaran-oleh').value,
             });
             e.target.reset();
         });
         
+        // --- UI & Rendering Functions (Mostly unchanged) ---
         const formatRupiah = (number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
         const toast = document.getElementById('toast');
         const showToast = (message, isError = false) => {
@@ -488,7 +487,6 @@
             toast.classList.remove('translate-x-[120%]');
             setTimeout(() => toast.classList.add('translate-x-[120%]'), 3000);
         };
-
         const pages = document.querySelectorAll('.page');
         const navBtns = document.querySelectorAll('.nav-btn');
         const showPage = (pageId) => {
@@ -497,7 +495,6 @@
             navBtns.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`button[onclick="showPage('${pageId}')"]`).classList.add('active');
         };
-
         const inputTabs = document.querySelectorAll('.input-tab');
         const switchForm = (formType) => {
             document.getElementById('form-pemasukan').classList.toggle('hidden', formType !== 'pemasukan');
@@ -507,7 +504,6 @@
             activeTab.classList.add('active');
             document.getElementById(formType === 'pemasukan' ? 'pengeluaran-tab' : 'pemasukan-tab').classList.add('text-gray-500');
         };
-
         const renderDashboard = () => {
             const totalPemasukan = transactions.filter(t => t.type === 'pemasukan').reduce((sum, t) => sum + t.jumlah, 0);
             const totalPengeluaran = transactions.filter(t => t.type === 'pengeluaran').reduce((sum, t) => sum + t.jumlah, 0);
@@ -516,10 +512,7 @@
             document.getElementById('saldo-saat-ini').textContent = formatRupiah(totalPemasukan - totalPengeluaran);
             const recentList = document.getElementById('recent-transactions-list');
             recentList.innerHTML = '';
-            if (transactions.length === 0) {
-                recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada transaksi.</p>`;
-                return;
-            }
+            if (transactions.length === 0) { recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada transaksi.</p>`; return; }
             transactions.slice(0, 5).forEach(t => {
                 const isIncome = t.type === 'pemasukan';
                 const item = document.createElement('div');
@@ -530,7 +523,6 @@
             });
             feather.replace();
         };
-
         const renderChart = () => {
             const ctx = document.getElementById('financialChart').getContext('2d');
             const allMonths = [...new Set(transactions.map(t => `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}`))].sort();
@@ -541,44 +533,10 @@
             const incomeData = visibleMonths.map(m => transactions.filter(t => t.type === 'pemasukan' && `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}` === m).reduce((s, t) => s + t.jumlah, 0));
             const expenseData = visibleMonths.map(m => transactions.filter(t => t.type === 'pengeluaran' && `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}` === m).reduce((s, t) => s + t.jumlah, 0));
             if(financialChart) financialChart.destroy();
-            financialChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Pemasukan',
-                        data: incomeData,
-                        backgroundColor: '#81e6d9'
-                    }, {
-                        label: 'Pengeluaran',
-                        data: expenseData,
-                        backgroundColor: '#fecaca'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: (v) => v >= 1e6 ? `Rp ${v/1e6}jt` : (v >= 1e3 ? `Rp ${v/1e3}rb` : `Rp ${v}`)
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: (c) => `${c.dataset.label}: ${formatRupiah(c.parsed.y)}`
-                            }
-                        }
-                    }
-                }
-            });
+            financialChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Pemasukan', data: incomeData, backgroundColor: '#81e6d9' }, { label: 'Pengeluaran', data: expenseData, backgroundColor: '#fecaca' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: (v) => v >= 1e6 ? `Rp ${v/1e6}jt` : (v >= 1e3 ? `Rp ${v/1e3}rb` : `Rp ${v}`) } } }, plugins: { tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatRupiah(c.parsed.y)}` } } } } });
             document.getElementById('chart-next-btn').disabled = chartState.offset === 0;
             document.getElementById('chart-prev-btn').disabled = startIndex === 0;
         };
-        
         const renderLaporan = () => {
             const bulan = document.getElementById('laporan-bulan').value;
             const tahun = document.getElementById('laporan-tahun').value;
@@ -590,10 +548,7 @@
             document.getElementById('laporan-selisih').textContent = formatRupiah(p - pg);
             const tabelBody = document.getElementById('laporan-tabel');
             tabelBody.innerHTML = '';
-            if (filtered.length === 0) {
-                tabelBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">Tidak ada data.</td></tr>`;
-                return;
-            }
+            if (filtered.length === 0) { tabelBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">Tidak ada data.</td></tr>`; return; }
             filtered.sort((a,b) => a.tanggal - b.tanggal).forEach(t => {
                 const isIncome = t.type === 'pemasukan';
                 const row = document.createElement('tr');
@@ -603,7 +558,6 @@
                 tabelBody.appendChild(row);
             });
         };
-
         const generatePDF = () => {
             const { jsPDF } = window.jspdf;
             const content = document.getElementById('laporan-content');
@@ -620,7 +574,6 @@
             });
         };
         window.generatePDF = generatePDF;
-        
         const setupLaporanFilters = () => {
             const bulanSelect = document.getElementById('laporan-bulan');
             const tahunSelect = document.getElementById('laporan-tahun');
@@ -632,21 +585,13 @@
             bulanSelect.addEventListener('change', renderLaporan);
             tahunSelect.addEventListener('change', renderLaporan);
         };
-        
         const renderAll = () => { renderDashboard(); renderLaporan(); renderChart(); };
-
         const initializeUI = () => {
-            feather.replace();
-            showPage('beranda');
-            switchForm('pemasukan');
+            feather.replace(); showPage('beranda'); switchForm('pemasukan');
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('pemasukan-tanggal').value = today;
-            document.getElementById('pengeluaran-tanggal').value = today;
-            setupLaporanFilters();
-            window.showPage = showPage;
-            window.switchForm = switchForm;
+            document.getElementById('pemasukan-tanggal').value = today; document.getElementById('pengeluaran-tanggal').value = today;
+            setupLaporanFilters(); window.showPage = showPage; window.switchForm = switchForm;
         };
-
         const modal = document.getElementById('detail-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
         const showTransactionDetails = (transactionId) => {
@@ -658,27 +603,19 @@
             else detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Kategori:</strong> ${t.kategori}</p>`;
             document.getElementById('modal-body').innerHTML = detailsHtml;
             const modalImage = document.getElementById('modal-image');
-            if (t.foto) {
-                modalImage.src = t.foto;
-                modalImage.parentElement.classList.remove('hidden');
-            } else {
-                modalImage.src = '';
-                modalImage.parentElement.classList.add('hidden');
-            }
-            modal.classList.remove('hidden');
-            feather.replace();
+            if (t.foto) { modalImage.src = t.foto; modalImage.parentElement.classList.remove('hidden'); }
+            else { modalImage.src = ''; modalImage.parentElement.classList.add('hidden'); }
+            modal.classList.remove('hidden'); feather.replace();
         };
         const closeModal = () => modal.classList.add('hidden');
         closeModalBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
         ['recent-transactions-list', 'laporan-tabel'].forEach(id => {
             document.getElementById(id).addEventListener('click', (e) => {
                 const item = e.target.closest('[data-transaction-id]');
                 if (item) showTransactionDetails(item.dataset.transactionId);
             });
         });
-        
         document.getElementById('chart-prev-btn').addEventListener('click', () => { chartState.offset++; renderChart(); });
         document.getElementById('chart-next-btn').addEventListener('click', () => { chartState.offset = Math.max(0, chartState.offset - 1); renderChart(); });
         document.getElementById('pemasukan-foto').addEventListener('change', function(e) {
@@ -687,11 +624,8 @@
                 const reader = new FileReader();
                 reader.onload = (ev) => { preview.src = ev.target.result; preview.classList.remove('hidden'); }
                 reader.readAsDataURL(e.target.files[0]);
-            } else {
-                preview.classList.add('hidden');
-            }
+            } else { preview.classList.add('hidden'); }
         });
-
     </script>
 </body>
 </html>
