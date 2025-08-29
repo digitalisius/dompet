@@ -52,11 +52,7 @@
                 </div>
                 <h1 class="text-2xl font-bold text-gray-900" id="auth-title">Login ke Akun Anda</h1>
             </div>
-
-            <!-- Error Message -->
             <div id="auth-error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4 text-sm hidden"></div>
-
-            <!-- Login Form -->
             <form id="login-form" class="space-y-4">
                 <div>
                     <label for="login-identifier" class="block text-sm font-medium text-gray-700 mb-1 text-left">Username atau Email</label>
@@ -68,8 +64,6 @@
                 </div>
                 <button type="submit" class="auth-btn w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">Login</button>
             </form>
-
-            <!-- Register Form -->
             <form id="register-form" class="space-y-4 hidden">
                  <div>
                     <label for="register-username" class="block text-sm font-medium text-gray-700 mb-1 text-left">Username</label>
@@ -86,7 +80,6 @@
                 </div>
                 <button type="submit" class="auth-btn w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">Daftar</button>
             </form>
-
             <p class="text-center text-sm text-gray-600 mt-6">
                 <span id="login-prompt">Belum punya akun? <button id="show-register-btn" class="font-semibold text-indigo-600 hover:underline">Daftar di sini</button></span>
                 <span id="register-prompt" class="hidden">Sudah punya akun? <button id="show-login-btn" class="font-semibold text-indigo-600 hover:underline">Login di sini</button></span>
@@ -94,7 +87,7 @@
         </div>
     </div>
 
-    <!-- App Container (rest of the HTML is the same as before) -->
+    <!-- App Container -->
     <div id="app-container" class="hidden container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl">
         <header class="bg-white/80 backdrop-blur-lg shadow-sm rounded-xl p-3 sm:p-4 mb-6 flex justify-between items-center sticky top-4 z-10 border border-gray-200/80">
             <div class="flex items-center space-x-3">
@@ -171,9 +164,8 @@
                         <div><label for="pemasukan-oleh" class="block text-sm font-medium text-gray-700 mb-1">Diterima Oleh</label><select id="pemasukan-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select></div>
                         <div><label for="pemasukan-disimpan" class="block text-sm font-medium text-gray-700 mb-1">Disimpan di</label><input type="text" id="pemasukan-disimpan" placeholder="Contoh: Bank BCA, Gopay" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
                         <div><label for="pemasukan-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti (Opsional)</label><input type="file" id="pemasukan-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"><img id="pemasukan-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" /></div>
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center space-x-2">
-                            <span id="pemasukan-submit-text">Simpan Pemasukan</span>
-                            <div id="pemasukan-loader" class="loader w-5 h-5 rounded-full border-2 border-white/50 hidden"></div>
+                        <button type="submit" id="pemasukan-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center space-x-2">
+                            <span>Simpan Pemasukan</span>
                         </button>
                     </form>
                     <form id="form-pengeluaran" class="space-y-5 hidden">
@@ -183,7 +175,8 @@
                         <div><label for="pengeluaran-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label><input type="text" id="pengeluaran-keterangan" placeholder="Contoh: Belanja bulanan" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
                         <div><label for="pengeluaran-kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label><select id="pengeluaran-kategori" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Makanan & Minuman</option><option>Transportasi</option><option>Tagihan</option><option>Hiburan</option><option>Pendidikan</option><option>Kesehatan</option><option>Lainnya</option></select></div>
                         <div><label for="pengeluaran-oleh" class="block text-sm font-medium text-gray-700 mb-1">Dibayar Oleh</label><select id="pengeluaran-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select></div>
-                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-red-300">Simpan Pengeluaran</button>
+                        <div><label for="pengeluaran-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Nota (Opsional)</label><input type="file" id="pengeluaran-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"><img id="pengeluaran-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" /></div>
+                        <button type="submit" id="pengeluaran-submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-red-300">Simpan Pengeluaran</button>
                     </form>
                 </div>
             </div>
@@ -205,7 +198,7 @@
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left text-gray-600">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50"><tr><th scope="col" class="px-6 py-3 rounded-l-lg">Tanggal</th><th scope="col" class="px-6 py-3">Keterangan</th><th scope="col" class="px-6 py-3">Tipe</th><th scope="col" class="px-6 py-3">Jumlah</th><th scope="col" class="px-6 py-3 rounded-r-lg">Oleh</th></tr></thead>
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50"><tr><th scope="col" class="px-6 py-3 rounded-l-lg">Tanggal</th><th scope="col" class="px-6 py-3">Keterangan</th><th scope="col" class="px-6 py-3">Tipe</th><th scope="col" class="px-6 py-3">Jumlah</th><th scope="col" class="px-6 py-3">Oleh</th><th scope="col" class="px-6 py-3 text-center rounded-r-lg">Aksi</th></tr></thead>
                                 <tbody id="laporan-tabel"></tbody>
                             </table>
                         </div>
@@ -215,8 +208,7 @@
         </main>
     </div>
 
-    <!-- Toast & Modal -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-xl translate-x-[120%] transition-transform duration-500 z-50"></div>
+    <!-- Modals -->
     <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6 relative animate-scale-in">
             <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i data-feather="x" class="w-6 h-6"></i></button>
@@ -226,11 +218,21 @@
         </div>
     </div>
     
+    <div id="popup-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 text-center animate-scale-in">
+            <div id="popup-loader" class="mx-auto mb-4 loader w-12 h-12 rounded-full border-4 border-gray-200 hidden"></div>
+            <div id="popup-icon" class="mx-auto mb-4"></div>
+            <h3 class="text-xl font-bold mb-2 text-gray-800" id="popup-title"></h3>
+            <p class="text-gray-600 mb-6" id="popup-message"></p>
+            <div id="popup-button-container" class="flex items-center gap-3"></div>
+        </div>
+    </div>
+    
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, Timestamp, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, Timestamp, doc, getDoc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
         // --- CONFIGURATION ---
         const firebaseConfig = {
@@ -255,7 +257,8 @@
         let currentUser = null;
         let unsubscribeFromFirestore = null;
         let chartState = { monthsToShow: 6, offset: 0 };
-        let isNewLogin = false; // Flag for welcome message
+        let isNewLogin = false;
+        let editingTransactionId = null;
         
         // --- DOM ELEMENTS ---
         const loginPage = document.getElementById('login-page');
@@ -266,91 +269,77 @@
         const authError = document.getElementById('auth-error');
         const showRegisterBtn = document.getElementById('show-register-btn');
         const showLoginBtn = document.getElementById('show-login-btn');
-        const authTitle = document.getElementById('auth-title');
-        const loginPrompt = document.getElementById('login-prompt');
-        const registerPrompt = document.getElementById('register-prompt');
         const authButtons = document.querySelectorAll('.auth-btn');
 
-        // --- AUTHENTICATION ---
-        const setAuthButtonsLoading = (isLoading) => {
-            authButtons.forEach(btn => btn.disabled = isLoading);
+        const popupModal = document.getElementById('popup-modal');
+        const popupTitle = document.getElementById('popup-title');
+        const popupMessage = document.getElementById('popup-message');
+        const popupLoader = document.getElementById('popup-loader');
+        const popupIcon = document.getElementById('popup-icon');
+        const popupBtnContainer = document.getElementById('popup-button-container');
+
+        // --- UI FUNCTIONS ---
+        const showPopup = (config) => {
+            popupTitle.textContent = config.title;
+            popupMessage.textContent = config.message;
+
+            popupLoader.classList.toggle('hidden', config.icon !== 'loading');
+            popupIcon.innerHTML = '';
+            if (config.icon === 'success') popupIcon.innerHTML = `<i data-feather="check-circle" class="w-12 h-12 text-green-500"></i>`;
+            if (config.icon === 'error') popupIcon.innerHTML = `<i data-feather="x-circle" class="w-12 h-12 text-red-500"></i>`;
+            
+            popupBtnContainer.innerHTML = '';
+            if (config.buttons && config.buttons.length > 0) {
+                config.buttons.forEach(btnInfo => {
+                    const button = document.createElement('button');
+                    button.textContent = btnInfo.text;
+                    button.className = `w-full font-bold py-2 px-4 rounded-lg transition-all duration-300 ${btnInfo.class || 'bg-indigo-600 hover:bg-indigo-700 text-white'}`;
+                    button.onclick = () => {
+                        hidePopup();
+                        if (btnInfo.action) btnInfo.action();
+                    };
+                    popupBtnContainer.appendChild(button);
+                });
+            }
+
+            popupModal.classList.remove('hidden');
+            feather.replace();
         };
 
+        const hidePopup = () => popupModal.classList.add('hidden');
+        
+        // --- AUTHENTICATION & DATA HANDLING (functions are mostly the same)
+        const setAuthButtonsLoading = (isLoading) => authButtons.forEach(btn => btn.disabled = isLoading);
         const handleLogin = async (e) => {
-            e.preventDefault();
-            setAuthButtonsLoading(true);
-            isNewLogin = true; // Set flag to show welcome message on success
+            e.preventDefault(); setAuthButtonsLoading(true); isNewLogin = true;
             const identifier = document.getElementById('login-identifier').value.trim();
             const password = document.getElementById('login-password').value;
             let email = identifier;
-
-            // Check if identifier is a username or an email
             if (identifier && !identifier.includes('@')) {
                 try {
-                    const usernameDocRef = doc(db, "usernames", identifier.toLowerCase());
-                    const usernameDoc = await getDoc(usernameDocRef);
-                    if (usernameDoc.exists()) {
-                        email = usernameDoc.data().email;
-                    } else {
-                        handleAuthError({ code: 'auth/user-not-found' });
-                        setAuthButtonsLoading(false);
-                        return;
-                    }
-                } catch (error) {
-                    console.error("Error fetching username:", error);
-                    handleAuthError({}); // Generic error
-                    setAuthButtonsLoading(false);
-                    return;
-                }
+                    const usernameDoc = await getDoc(doc(db, "usernames", identifier.toLowerCase()));
+                    if (usernameDoc.exists()) email = usernameDoc.data().email;
+                    else { handleAuthError({ code: 'auth/user-not-found' }); setAuthButtonsLoading(false); return; }
+                } catch (error) { console.error("Error fetching username:", error); handleAuthError({}); setAuthButtonsLoading(false); return; }
             }
-
-            signInWithEmailAndPassword(auth, email, password)
-                .catch(handleAuthError)
-                .finally(() => setAuthButtonsLoading(false));
+            signInWithEmailAndPassword(auth, email, password).catch(handleAuthError).finally(() => setAuthButtonsLoading(false));
         };
-
         const handleRegister = async (e) => {
-            e.preventDefault();
-            setAuthButtonsLoading(true);
-            isNewLogin = true; // Set flag to show welcome message on success
+            e.preventDefault(); setAuthButtonsLoading(true); isNewLogin = true;
             const username = document.getElementById('register-username').value.trim().toLowerCase();
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value;
-
-            // Validate username pattern client-side first
-            if (!/^[a-zA-Z0-9_]{3,15}$/.test(username)) {
-                 handleAuthError({ code: 'auth/invalid-username' });
-                 setAuthButtonsLoading(false);
-                 return;
-            }
-
-            // Check if username already exists
-            const usernameDocRef = doc(db, "usernames", username);
-            const usernameDoc = await getDoc(usernameDocRef);
-
-            if (usernameDoc.exists()) {
-                handleAuthError({ code: 'auth/username-already-in-use' });
-                setAuthButtonsLoading(false);
-                return;
-            }
-
-            // If username is free, create user
+            if (!/^[a-zA-Z0-9_]{3,15}$/.test(username)) { handleAuthError({ code: 'auth/invalid-username' }); setAuthButtonsLoading(false); return; }
+            const usernameDoc = await getDoc(doc(db, "usernames", username));
+            if (usernameDoc.exists()) { handleAuthError({ code: 'auth/username-already-in-use' }); setAuthButtonsLoading(false); return; }
             createUserWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
-                    // Update profile and create username document
                     await updateProfile(userCredential.user, { displayName: username });
-                    await setDoc(doc(db, "usernames", username), {
-                        uid: userCredential.user.uid,
-                        email: email
-                    });
-                })
-                .catch(handleAuthError)
-                .finally(() => setAuthButtonsLoading(false));
+                    await setDoc(doc(db, "usernames", username), { uid: userCredential.user.uid, email: email });
+                }).catch(handleAuthError).finally(() => setAuthButtonsLoading(false));
         };
-        
         const handleAuthError = (error) => {
-            let message = "Terjadi kesalahan. Silakan coba lagi.";
-            isNewLogin = false; // Reset flag on error
+            isNewLogin = false; let message = "Terjadi kesalahan. Silakan coba lagi.";
             switch (error.code) {
                 case 'auth/user-not-found': message = "Username atau email tidak terdaftar."; break;
                 case 'auth/wrong-password': message = "Password salah."; break;
@@ -360,178 +349,194 @@
                 case 'auth/weak-password': message = "Password terlalu lemah (minimal 6 karakter)."; break;
                 case 'auth/invalid-email': message = "Format email tidak valid."; break;
             }
-            authError.textContent = message;
-            authError.classList.remove('hidden');
+            authError.textContent = message; authError.classList.remove('hidden');
         };
-
-        const logOut = () => signOut(auth).catch(error => console.error("Logout Gagal:", error));
-
+        const logOut = () => signOut(auth);
         onAuthStateChanged(auth, user => {
             if (user) {
-                currentUser = user;
-                loginPage.classList.add('hidden');
-                appContainer.classList.remove('hidden');
+                currentUser = user; loginPage.classList.add('hidden'); appContainer.classList.remove('hidden');
                 const userName = user.displayName || user.email;
                 document.getElementById('user-name').textContent = userName;
-                if (userName) {
-                    document.getElementById('user-initial').textContent = userName.charAt(0).toUpperCase();
-                }
-
-                // Show welcome message only on a new login/register action
+                if (userName) document.getElementById('user-initial').textContent = userName.charAt(0).toUpperCase();
                 if (isNewLogin) {
-                    showToast(`Selamat datang ${userName}, di pencatat keuangan anda.`);
-                    isNewLogin = false; // Reset the flag
+                    showPopup({ title: `Selamat Datang, ${userName}!`, message: 'Anda berhasil masuk.', icon: 'success', buttons: [{ text: 'Siap Bos' }] });
+                    isNewLogin = false;
                 }
-
-                listenToTransactions();
-                initializeUI();
+                listenToTransactions(); initializeUI();
             } else {
-                currentUser = null;
-                loginPage.classList.remove('hidden');
-                appContainer.classList.add('hidden');
+                currentUser = null; loginPage.classList.remove('hidden'); appContainer.classList.add('hidden');
                 if (unsubscribeFromFirestore) unsubscribeFromFirestore();
-                transactions = [];
-                renderAll();
+                transactions = []; renderAll();
             }
         });
-
         const toggleAuthForms = (show) => {
             authError.classList.add('hidden');
-            if (show === 'register') {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                authTitle.textContent = "Buat Akun Baru";
-                loginPrompt.classList.add('hidden');
-                registerPrompt.classList.remove('hidden');
-            } else {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                authTitle.textContent = "Login ke Akun Anda";
-                loginPrompt.classList.remove('hidden');
-                registerPrompt.classList.add('hidden');
-            }
+            loginForm.classList.toggle('hidden', show === 'register'); registerForm.classList.toggle('hidden', show !== 'register');
+            authTitle.textContent = show === 'register' ? "Buat Akun Baru" : "Login ke Akun Anda";
+            loginPrompt.classList.toggle('hidden', show === 'register'); registerPrompt.classList.toggle('hidden', show !== 'register');
         };
-        
-        // --- DATA HANDLING (FIRESTORE & CLOUDINARY) ---
         const listenToTransactions = () => {
             if (!currentUser) return;
-            const transactionsCol = collection(db, 'users', currentUser.uid, 'transactions');
-            const q = query(transactionsCol, orderBy('tanggal', 'desc'));
-            unsubscribeFromFirestore = onSnapshot(q, (querySnapshot) => {
-                transactions = [];
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    transactions.push({ ...data, id: doc.id, tanggal: data.tanggal.toDate() });
-                });
+            const q = query(collection(db, 'users', currentUser.uid, 'transactions'), orderBy('tanggal', 'desc'));
+            unsubscribeFromFirestore = onSnapshot(q, (snapshot) => {
+                transactions = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, tanggal: doc.data().tanggal.toDate() }));
                 renderAll();
-            }, (error) => {
-                console.error("Gagal mengambil data:", error);
-                showToast("Gagal mengambil data.", true);
+            }, (error) => console.error("Gagal mengambil data:", error));
+        };
+        const uploadToCloudinary = async (file) => {
+            const formData = new FormData(); formData.append('file', file); formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+            const data = await response.json();
+            if (data.secure_url) return data.secure_url; else throw new Error('Cloudinary upload failed');
+        };
+        const handleFormSubmit = async (e) => {
+            e.preventDefault();
+            const form = e.target; const isPemasukan = form.id.includes('pemasukan');
+            showPopup({ title: editingTransactionId ? 'Memperbarui...' : 'Menyimpan...', message: 'Mohon tunggu sebentar.', icon: 'loading' });
+            try {
+                let transactionData = {
+                    type: isPemasukan ? 'pemasukan' : 'pengeluaran',
+                    tanggal: form.querySelector('[type=date]').value,
+                    jumlah: parseFloat(form.querySelector('[type=number]').value),
+                    keterangan: form.querySelector('input[id*="-keterangan"]').value,
+                    oleh: form.querySelector('select[id*="-oleh"]').value,
+                    foto: null
+                };
+
+                const fotoInput = isPemasukan ? document.getElementById('pemasukan-foto') : document.getElementById('pengeluaran-foto');
+                if (fotoInput.files && fotoInput.files[0]) {
+                    transactionData.foto = await uploadToCloudinary(fotoInput.files[0]);
+                } else if(editingTransactionId) {
+                    const oldTransaction = transactions.find(t => t.id === editingTransactionId);
+                    transactionData.foto = oldTransaction.foto || null;
+                }
+
+                if (isPemasukan) transactionData.disimpanDi = document.getElementById('pemasukan-disimpan').value;
+                else transactionData.kategori = document.getElementById('pengeluaran-kategori').value;
+
+                if (editingTransactionId) {
+                    const docRef = doc(db, 'users', currentUser.uid, 'transactions', editingTransactionId);
+                    await updateDoc(docRef, { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
+                } else {
+                    const colRef = collection(db, 'users', currentUser.uid, 'transactions');
+                    await addDoc(colRef, { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
+                }
+                
+                resetInputForms();
+                showPopup({ title: 'Berhasil!', message: 'Data transaksi telah disimpan.', icon: 'success', buttons: [{ text: 'Baiklah', action: () => showPage('laporan') }] });
+            } catch (error) {
+                console.error("Form submit error:", error);
+                showPopup({ title: 'Gagal Menyimpan', message: 'Terjadi kesalahan. Silakan coba lagi.', icon: 'error', buttons: [{ text: 'Tutup' }] });
+            }
+        };
+        const handleDeleteTransaction = (transactionId) => {
+            showPopup({
+                title: 'Konfirmasi Hapus',
+                message: 'Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.',
+                icon: 'error',
+                buttons: [
+                    { text: 'Batal', class: 'bg-gray-200 hover:bg-gray-300 text-gray-800' },
+                    { text: 'Ya, Hapus', class: 'bg-red-600 hover:bg-red-700 text-white', action: async () => {
+                        try {
+                            await deleteDoc(doc(db, 'users', currentUser.uid, 'transactions', transactionId));
+                            showPopup({title: 'Dihapus', message: 'Transaksi telah dihapus.', icon: 'success', buttons: [{text: 'OK'}]});
+                        } catch (error) {
+                            console.error("Delete error:", error);
+                            showPopup({title: 'Gagal', message: 'Gagal menghapus transaksi.', icon: 'error', buttons: [{text: 'Tutup'}]});
+                        }
+                    }}
+                ]
             });
         };
-
-        const uploadToCloudinary = async (file) => {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-            try {
-                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
-                const data = await response.json();
-                if (data.secure_url) return data.secure_url;
-                else throw new Error('Cloudinary upload failed');
-            } catch (error) {
-                console.error('Error uploading to Cloudinary:', error);
-                showToast('Gagal mengunggah gambar.', true);
-                return null;
+        const handleEditTransaction = (transactionId) => {
+            const t = transactions.find(tr => tr.id === transactionId); if (!t) return;
+            editingTransactionId = transactionId;
+            showPage('input');
+            switchForm(t.type);
+            const form = document.getElementById(`form-${t.type}`);
+            form.querySelector('[type=date]').value = new Date(t.tanggal.getTime() - (t.tanggal.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+            form.querySelector('[type=number]').value = t.jumlah;
+            form.querySelector('input[id*="-keterangan"]').value = t.keterangan;
+            form.querySelector('select[id*="-oleh"]').value = t.oleh;
+            if (t.type === 'pemasukan') {
+                form.querySelector('input[id*="-disimpan"]').value = t.disimpanDi;
+                document.getElementById('pemasukan-submit-btn').firstElementChild.textContent = "Perbarui Pemasukan";
+            } else {
+                form.querySelector('select[id*="-kategori"]').value = t.kategori;
+                document.getElementById('pengeluaran-submit-btn').textContent = "Perbarui Pengeluaran";
+            }
+            const preview = document.getElementById(`${t.type}-preview`);
+            if (t.foto) {
+                preview.src = t.foto;
+                preview.classList.remove('hidden');
+            } else {
+                preview.classList.add('hidden');
             }
         };
-
-        const addTransaction = async (data) => {
-            if (!currentUser) return showToast("Anda harus login.", true);
-            try {
-                const transactionsCol = collection(db, 'users', currentUser.uid, 'transactions');
-                await addDoc(transactionsCol, { ...data, tanggal: Timestamp.fromDate(new Date(data.tanggal)) });
-                chartState.offset = 0;
-                showToast('Data berhasil disimpan!');
-                showPage('beranda');
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                showToast("Gagal menyimpan data.", true);
-            }
+        const resetInputForms = () => {
+            editingTransactionId = null;
+            document.getElementById('form-pemasukan').reset();
+            document.getElementById('form-pengeluaran').reset();
+            document.getElementById('pemasukan-preview').classList.add('hidden');
+            document.getElementById('pengeluaran-preview').classList.add('hidden');
+            document.getElementById('pemasukan-submit-btn').firstElementChild.textContent = "Simpan Pemasukan";
+            document.getElementById('pengeluaran-submit-btn').textContent = "Simpan Pengeluaran";
         };
-
         // --- EVENT LISTENERS ---
         loginForm.addEventListener('submit', handleLogin);
         registerForm.addEventListener('submit', handleRegister);
         logoutBtn.addEventListener('click', logOut);
         showRegisterBtn.addEventListener('click', () => toggleAuthForms('register'));
         showLoginBtn.addEventListener('click', () => toggleAuthForms('login'));
-        document.getElementById('form-pemasukan').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const btnText = document.getElementById('pemasukan-submit-text');
-            const loader = document.getElementById('pemasukan-loader');
-            submitBtn.disabled = true;
-            btnText.classList.add('hidden');
-            loader.classList.remove('hidden');
-            const fotoInput = document.getElementById('pemasukan-foto');
-            let fotoUrl = null;
-            if (fotoInput.files && fotoInput.files[0]) {
-                fotoUrl = await uploadToCloudinary(fotoInput.files[0]);
-                if (!fotoUrl) {
-                    submitBtn.disabled = false; btnText.classList.remove('hidden'); loader.classList.add('hidden'); return;
-                }
-            }
-            await addTransaction({
-                type: 'pemasukan', tanggal: document.getElementById('pemasukan-tanggal').value, jumlah: parseFloat(document.getElementById('pemasukan-jumlah').value),
-                keterangan: document.getElementById('pemasukan-keterangan').value, oleh: document.getElementById('pemasukan-oleh').value, disimpanDi: document.getElementById('pemasukan-disimpan').value, foto: fotoUrl,
-            });
-            e.target.reset(); document.getElementById('pemasukan-preview').classList.add('hidden');
-            submitBtn.disabled = false; btnText.classList.remove('hidden'); loader.classList.add('hidden');
+        document.getElementById('form-pemasukan').addEventListener('submit', handleFormSubmit);
+        document.getElementById('form-pengeluaran').addEventListener('submit', handleFormSubmit);
+        document.getElementById('laporan-tabel').addEventListener('click', e => {
+            const editBtn = e.target.closest('.edit-btn');
+            const deleteBtn = e.target.closest('.delete-btn');
+            if (editBtn) handleEditTransaction(editBtn.dataset.id);
+            if (deleteBtn) handleDeleteTransaction(deleteBtn.dataset.id);
         });
-        document.getElementById('form-pengeluaran').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await addTransaction({
-                type: 'pengeluaran', tanggal: document.getElementById('pengeluaran-tanggal').value, jumlah: parseFloat(document.getElementById('pengeluaran-jumlah').value),
-                keterangan: document.getElementById('pengeluaran-keterangan').value, kategori: document.getElementById('pengeluaran-kategori').value, oleh: document.getElementById('pengeluaran-oleh').value,
+        ['pemasukan-foto', 'pengeluaran-foto'].forEach(id => {
+            document.getElementById(id).addEventListener('change', e => {
+                const preview = document.getElementById(id.replace('foto', 'preview'));
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => { preview.src = ev.target.result; preview.classList.remove('hidden'); }
+                    reader.readAsDataURL(e.target.files[0]);
+                } else preview.classList.add('hidden');
             });
-            e.target.reset();
         });
         
-        // --- UI & Rendering Functions (Mostly unchanged) ---
-        const formatRupiah = (number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
-        const toast = document.getElementById('toast');
-        const showToast = (message, isError = false) => {
-            toast.textContent = message;
-            toast.className = `fixed bottom-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl transition-transform duration-500 z-50 ${isError ? 'bg-red-500' : 'bg-green-600'}`;
-            toast.classList.remove('translate-x-[120%]');
-            setTimeout(() => toast.classList.add('translate-x-[120%]'), 3000);
-        };
-        const pages = document.querySelectorAll('.page');
-        const navBtns = document.querySelectorAll('.nav-btn');
+        // --- Rendering Functions ---
+        const pages = document.querySelectorAll('.page'); const navBtns = document.querySelectorAll('.nav-btn');
         const showPage = (pageId) => {
             pages.forEach(p => p.classList.add('hidden'));
             document.getElementById(pageId + '-page').classList.remove('hidden');
             navBtns.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`button[onclick="showPage('${pageId}')"]`).classList.add('active');
+            if (pageId === 'laporan') renderLaporan();
+            if (pageId === 'input' && editingTransactionId) {
+                // If not editing, reset forms
+            } else if (pageId === 'input') {
+                resetInputForms();
+            }
         };
         const inputTabs = document.querySelectorAll('.input-tab');
         const switchForm = (formType) => {
             document.getElementById('form-pemasukan').classList.toggle('hidden', formType !== 'pemasukan');
             document.getElementById('form-pengeluaran').classList.toggle('hidden', formType !== 'pengeluaran');
             inputTabs.forEach(tab => tab.classList.remove('active', 'text-gray-500'));
-            const activeTab = document.getElementById(`${formType}-tab`);
-            activeTab.classList.add('active');
+            const activeTab = document.getElementById(`${formType}-tab`); activeTab.classList.add('active');
             document.getElementById(formType === 'pemasukan' ? 'pengeluaran-tab' : 'pemasukan-tab').classList.add('text-gray-500');
         };
-        const renderDashboard = () => {
-            const totalPemasukan = transactions.filter(t => t.type === 'pemasukan').reduce((sum, t) => sum + t.jumlah, 0);
-            const totalPengeluaran = transactions.filter(t => t.type === 'pengeluaran').reduce((sum, t) => sum + t.jumlah, 0);
+        const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
+        const renderDashboard = () => { /* ... unchanged ... */ 
+            const totalPemasukan = transactions.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0);
+            const totalPengeluaran = transactions.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
             document.getElementById('total-pemasukan').textContent = formatRupiah(totalPemasukan);
             document.getElementById('total-pengeluaran').textContent = formatRupiah(totalPengeluaran);
             document.getElementById('saldo-saat-ini').textContent = formatRupiah(totalPemasukan - totalPengeluaran);
-            const recentList = document.getElementById('recent-transactions-list');
-            recentList.innerHTML = '';
+            const recentList = document.getElementById('recent-transactions-list'); recentList.innerHTML = '';
             if (transactions.length === 0) { recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada transaksi.</p>`; return; }
             transactions.slice(0, 5).forEach(t => {
                 const isIncome = t.type === 'pemasukan';
@@ -543,11 +548,10 @@
             });
             feather.replace();
         };
-        const renderChart = () => {
+        const renderChart = () => { /* ... unchanged ... */ 
             const ctx = document.getElementById('financialChart').getContext('2d');
             const allMonths = [...new Set(transactions.map(t => `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}`))].sort();
-            const endIndex = allMonths.length - (chartState.offset * chartState.monthsToShow);
-            const startIndex = Math.max(0, endIndex - chartState.monthsToShow);
+            const endIndex = allMonths.length - (chartState.offset * chartState.monthsToShow); const startIndex = Math.max(0, endIndex - chartState.monthsToShow);
             const visibleMonths = allMonths.slice(startIndex, endIndex);
             const labels = visibleMonths.map(m => { const [y, mo] = m.split('-'); return new Date(y, mo - 1).toLocaleString('id-ID', { month: 'short', year: 'numeric' }); });
             const incomeData = visibleMonths.map(m => transactions.filter(t => t.type === 'pemasukan' && `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}` === m).reduce((s, t) => s + t.jumlah, 0));
@@ -558,65 +562,60 @@
             document.getElementById('chart-prev-btn').disabled = startIndex === 0;
         };
         const renderLaporan = () => {
-            const bulan = document.getElementById('laporan-bulan').value;
-            const tahun = document.getElementById('laporan-tahun').value;
+            const bulan = document.getElementById('laporan-bulan').value; const tahun = document.getElementById('laporan-tahun').value;
             const filtered = transactions.filter(t => t.tanggal.getMonth() == bulan && t.tanggal.getFullYear() == tahun);
             const p = filtered.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0);
             const pg = filtered.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
-            document.getElementById('laporan-pemasukan').textContent = formatRupiah(p);
-            document.getElementById('laporan-pengeluaran').textContent = formatRupiah(pg);
-            document.getElementById('laporan-selisih').textContent = formatRupiah(p - pg);
-            const tabelBody = document.getElementById('laporan-tabel');
-            tabelBody.innerHTML = '';
-            if (filtered.length === 0) { tabelBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">Tidak ada data.</td></tr>`; return; }
-            filtered.sort((a,b) => a.tanggal - b.tanggal).forEach(t => {
+            document.getElementById('laporan-pemasukan').textContent = formatRupiah(p); document.getElementById('laporan-pengeluaran').textContent = formatRupiah(pg); document.getElementById('laporan-selisih').textContent = formatRupiah(p - pg);
+            const tabelBody = document.getElementById('laporan-tabel'); tabelBody.innerHTML = '';
+            if (filtered.length === 0) { tabelBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Tidak ada data untuk periode ini.</td></tr>`; return; }
+            filtered.sort((a,b) => b.tanggal - a.tanggal).forEach(t => {
                 const isIncome = t.type === 'pemasukan';
-                const row = document.createElement('tr');
-                row.className = 'border-b border-gray-200/80 hover:bg-gray-50 cursor-pointer';
-                row.setAttribute('data-transaction-id', t.id);
-                row.innerHTML = `<td class="px-6 py-4">${t.tanggal.toLocaleDateString('id-ID')}</td><td class="px-6 py-4 font-medium text-gray-900">${t.keterangan}</td><td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-semibold ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td><td class="px-6 py-4 font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</td><td class="px-6 py-4">${t.oleh}</td>`;
+                const row = document.createElement('tr'); row.className = 'border-b border-gray-200/80 hover:bg-gray-50';
+                row.innerHTML = `<td class="px-6 py-4">${t.tanggal.toLocaleDateString('id-ID')}</td>
+                                 <td class="px-6 py-4 font-medium text-gray-900 cursor-pointer" onclick="showTransactionDetails('${t.id}')">${t.keterangan}</td>
+                                 <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-semibold ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td>
+                                 <td class="px-6 py-4 font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</td>
+                                 <td class="px-6 py-4">${t.oleh}</td>
+                                 <td class="px-6 py-4 text-center">
+                                    <button class="edit-btn p-1 text-indigo-500 hover:text-indigo-700" data-id="${t.id}"><i data-feather="edit-2" class="w-4 h-4 pointer-events-none"></i></button>
+                                    <button class="delete-btn p-1 text-red-500 hover:text-red-700" data-id="${t.id}"><i data-feather="trash-2" class="w-4 h-4 pointer-events-none"></i></button>
+                                 </td>`;
                 tabelBody.appendChild(row);
             });
+            feather.replace();
         };
-        const generatePDF = () => {
-            const { jsPDF } = window.jspdf;
-            const content = document.getElementById('laporan-content');
+        const generatePDF = () => { /* ... unchanged ... */ 
+            const { jsPDF } = window.jspdf; const content = document.getElementById('laporan-content');
             const bulan = document.getElementById('laporan-bulan').options[document.getElementById('laporan-bulan').selectedIndex].text;
             const tahun = document.getElementById('laporan-tahun').value;
             showToast('Mencetak PDF...', false);
             html2canvas(content, { scale: 2 }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save(`laporan-keuangan-${bulan}-${tahun}.pdf`);
+                const imgData = canvas.toDataURL('image/png'); const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight); pdf.save(`laporan-keuangan-${bulan}-${tahun}.pdf`);
             });
         };
         window.generatePDF = generatePDF;
         const setupLaporanFilters = () => {
-            const bulanSelect = document.getElementById('laporan-bulan');
-            const tahunSelect = document.getElementById('laporan-tahun');
+            const bulanSelect = document.getElementById('laporan-bulan'); const tahunSelect = document.getElementById('laporan-tahun');
+            if(bulanSelect.options.length > 1) return; 
             ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"].forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; bulanSelect.appendChild(o); });
             const currentYear = new Date().getFullYear();
             for (let i = currentYear; i >= currentYear - 5; i--) { const o = document.createElement('option'); o.value = i; o.textContent = i; tahunSelect.appendChild(o); }
-            bulanSelect.value = new Date().getMonth();
-            tahunSelect.value = currentYear;
-            bulanSelect.addEventListener('change', renderLaporan);
-            tahunSelect.addEventListener('change', renderLaporan);
+            bulanSelect.value = new Date().getMonth(); tahunSelect.value = currentYear;
+            bulanSelect.addEventListener('change', renderLaporan); tahunSelect.addEventListener('change', renderLaporan);
         };
-        const renderAll = () => { renderDashboard(); renderLaporan(); renderChart(); };
+        const renderAll = () => { renderDashboard(); renderChart(); if (!document.getElementById('laporan-page').classList.contains('hidden')) renderLaporan(); };
         const initializeUI = () => {
             feather.replace(); showPage('beranda'); switchForm('pemasukan');
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('pemasukan-tanggal').value = today; document.getElementById('pengeluaran-tanggal').value = today;
             setupLaporanFilters(); window.showPage = showPage; window.switchForm = switchForm;
         };
-        const modal = document.getElementById('detail-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modal = document.getElementById('detail-modal'); const closeModalBtn = document.getElementById('close-modal-btn');
         const showTransactionDetails = (transactionId) => {
-            const t = transactions.find(tr => tr.id == transactionId);
-            if (!t) return;
+            const t = transactions.find(tr => tr.id == transactionId); if (!t) return;
             document.getElementById('modal-title').textContent = t.keterangan;
             let detailsHtml = `<p><strong class="font-medium text-gray-500 w-28 inline-block">Jumlah:</strong> <span class="font-bold ${t.type === 'pemasukan' ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</span></p><p><strong class="font-medium text-gray-500 w-28 inline-block">Tanggal:</strong> ${t.tanggal.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p><p><strong class="font-medium text-gray-500 w-28 inline-block">Oleh:</strong> ${t.oleh}</p>`;
             if (t.type === 'pemasukan') detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Disimpan di:</strong> ${t.disimpanDi}</p>`;
@@ -627,10 +626,11 @@
             else { modalImage.src = ''; modalImage.parentElement.classList.add('hidden'); }
             modal.classList.remove('hidden'); feather.replace();
         };
+        window.showTransactionDetails = showTransactionDetails; // Make it globally accessible for inline onclick
         const closeModal = () => modal.classList.add('hidden');
         closeModalBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-        ['recent-transactions-list', 'laporan-tabel'].forEach(id => {
+        ['recent-transactions-list'].forEach(id => {
             document.getElementById(id).addEventListener('click', (e) => {
                 const item = e.target.closest('[data-transaction-id]');
                 if (item) showTransactionDetails(item.dataset.transactionId);
@@ -638,14 +638,6 @@
         });
         document.getElementById('chart-prev-btn').addEventListener('click', () => { chartState.offset++; renderChart(); });
         document.getElementById('chart-next-btn').addEventListener('click', () => { chartState.offset = Math.max(0, chartState.offset - 1); renderChart(); });
-        document.getElementById('pemasukan-foto').addEventListener('change', function(e) {
-            const preview = document.getElementById('pemasukan-preview');
-            if (e.target.files && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (ev) => { preview.src = ev.target.result; preview.classList.remove('hidden'); }
-                reader.readAsDataURL(e.target.files[0]);
-            } else { preview.classList.add('hidden'); }
-        });
     </script>
 </body>
 </html>
