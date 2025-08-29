@@ -216,7 +216,7 @@
     </div>
 
     <!-- Toast & Modal -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-xl translate-x-[120%] transition-transform duration-500"></div>
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-xl translate-x-[120%] transition-transform duration-500 z-50"></div>
     <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6 relative animate-scale-in">
             <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i data-feather="x" class="w-6 h-6"></i></button>
@@ -255,6 +255,7 @@
         let currentUser = null;
         let unsubscribeFromFirestore = null;
         let chartState = { monthsToShow: 6, offset: 0 };
+        let isNewLogin = false; // Flag for welcome message
         
         // --- DOM ELEMENTS ---
         const loginPage = document.getElementById('login-page');
@@ -278,12 +279,13 @@
         const handleLogin = async (e) => {
             e.preventDefault();
             setAuthButtonsLoading(true);
+            isNewLogin = true; // Set flag to show welcome message on success
             const identifier = document.getElementById('login-identifier').value.trim();
             const password = document.getElementById('login-password').value;
             let email = identifier;
 
             // Check if identifier is a username or an email
-            if (!identifier.includes('@')) {
+            if (identifier && !identifier.includes('@')) {
                 try {
                     const usernameDocRef = doc(db, "usernames", identifier.toLowerCase());
                     const usernameDoc = await getDoc(usernameDocRef);
@@ -295,6 +297,7 @@
                         return;
                     }
                 } catch (error) {
+                    console.error("Error fetching username:", error);
                     handleAuthError({}); // Generic error
                     setAuthButtonsLoading(false);
                     return;
@@ -309,9 +312,17 @@
         const handleRegister = async (e) => {
             e.preventDefault();
             setAuthButtonsLoading(true);
+            isNewLogin = true; // Set flag to show welcome message on success
             const username = document.getElementById('register-username').value.trim().toLowerCase();
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value;
+
+            // Validate username pattern client-side first
+            if (!/^[a-zA-Z0-9_]{3,15}$/.test(username)) {
+                 handleAuthError({ code: 'auth/invalid-username' });
+                 setAuthButtonsLoading(false);
+                 return;
+            }
 
             // Check if username already exists
             const usernameDocRef = doc(db, "usernames", username);
@@ -339,11 +350,13 @@
         
         const handleAuthError = (error) => {
             let message = "Terjadi kesalahan. Silakan coba lagi.";
+            isNewLogin = false; // Reset flag on error
             switch (error.code) {
                 case 'auth/user-not-found': message = "Username atau email tidak terdaftar."; break;
                 case 'auth/wrong-password': message = "Password salah."; break;
                 case 'auth/email-already-in-use': message = "Email ini sudah terdaftar."; break;
                 case 'auth/username-already-in-use': message = "Username ini sudah digunakan."; break;
+                case 'auth/invalid-username': message = "Format username tidak valid. Gunakan 3-15 karakter (huruf, angka, atau _)."; break;
                 case 'auth/weak-password': message = "Password terlalu lemah (minimal 6 karakter)."; break;
                 case 'auth/invalid-email': message = "Format email tidak valid."; break;
             }
@@ -363,6 +376,13 @@
                 if (userName) {
                     document.getElementById('user-initial').textContent = userName.charAt(0).toUpperCase();
                 }
+
+                // Show welcome message only on a new login/register action
+                if (isNewLogin) {
+                    showToast(`Selamat datang ${userName}, di pencatat keuangan anda.`);
+                    isNewLogin = false; // Reset the flag
+                }
+
                 listenToTransactions();
                 initializeUI();
             } else {
@@ -483,7 +503,7 @@
         const toast = document.getElementById('toast');
         const showToast = (message, isError = false) => {
             toast.textContent = message;
-            toast.className = `fixed bottom-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl transition-transform duration-500 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+            toast.className = `fixed bottom-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl transition-transform duration-500 z-50 ${isError ? 'bg-red-500' : 'bg-green-600'}`;
             toast.classList.remove('translate-x-[120%]');
             setTimeout(() => toast.classList.add('translate-x-[120%]'), 3000);
         };
