@@ -541,7 +541,40 @@
             const incomeData = visibleMonths.map(m => transactions.filter(t => t.type === 'pemasukan' && `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}` === m).reduce((s, t) => s + t.jumlah, 0));
             const expenseData = visibleMonths.map(m => transactions.filter(t => t.type === 'pengeluaran' && `${t.tanggal.getFullYear()}-${String(t.tanggal.getMonth() + 1).padStart(2, '0')}` === m).reduce((s, t) => s + t.jumlah, 0));
             if(financialChart) financialChart.destroy();
-            financialChart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Pemasukan', data: incomeData, backgroundColor: '#81e6d9' }, { label: 'Pengeluaran', data: expenseData, backgroundColor: '#fecaca' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: (v) => v >= 1e6 ? `Rp ${v/1e6}jt` : (v >= 1e3 ? `Rp ${v/1e3}rb` : `Rp ${v}`) } } } }, plugins: { tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatRupiah(c.parsed.y)}` } } } } });
+            financialChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Pemasukan',
+                        data: incomeData,
+                        backgroundColor: '#81e6d9'
+                    }, {
+                        label: 'Pengeluaran',
+                        data: expenseData,
+                        backgroundColor: '#fecaca'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (v) => v >= 1e6 ? `Rp ${v/1e6}jt` : (v >= 1e3 ? `Rp ${v/1e3}rb` : `Rp ${v}`)
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.dataset.label}: ${formatRupiah(c.parsed.y)}`
+                            }
+                        }
+                    }
+                }
+            });
             document.getElementById('chart-next-btn').disabled = chartState.offset === 0;
             document.getElementById('chart-prev-btn').disabled = startIndex === 0;
         };
