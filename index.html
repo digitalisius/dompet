@@ -128,7 +128,7 @@
                             <div><p class="text-sm text-gray-500">Total Pengeluaran</p><p id="total-pengeluaran" class="text-2xl font-bold text-gray-800">Rp 0</p></div>
                         </div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200/80 transition-transform hover:scale-[1.02] duration-300 md:col-span-2 lg:col-span-1">
+                    <div id="saldo-card" class="bg-white p-5 rounded-xl shadow-sm border border-gray-200/80 transition-transform hover:scale-[1.02] duration-300 md:col-span-2 lg:col-span-1 cursor-pointer">
                         <div class="flex items-center space-x-4">
                             <div class="p-3 bg-indigo-100 rounded-full"><i data-feather="briefcase" class="text-indigo-600"></i></div>
                             <div><p class="text-sm text-gray-500">Saldo Saat Ini</p><p id="saldo-saat-ini" class="text-2xl font-bold text-gray-800">Rp 0</p></div>
@@ -228,6 +228,17 @@
         </div>
     </div>
     
+    <div id="balance-breakdown-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 relative animate-scale-in">
+            <button id="close-balance-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i data-feather="x" class="w-6 h-6"></i></button>
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Rincian Saldo</h3>
+            <p class="text-sm text-gray-500 mb-4">Berikut adalah total pemasukan berdasarkan lokasi penyimpanan. Pengeluaran mengurangi saldo total secara keseluruhan.</p>
+            <div id="balance-breakdown-list" class="space-y-3 max-h-60 overflow-y-auto">
+                <!-- List will be generated here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
@@ -281,6 +292,11 @@
         const popupIcon = document.getElementById('popup-icon');
         const popupBtnContainer = document.getElementById('popup-button-container');
 
+        const balanceBreakdownModal = document.getElementById('balance-breakdown-modal');
+        const closeBalanceModalBtn = document.getElementById('close-balance-modal-btn');
+        const balanceBreakdownList = document.getElementById('balance-breakdown-list');
+        const saldoCard = document.getElementById('saldo-card');
+
         // --- UI FUNCTIONS ---
         const showPopup = (config) => {
             popupTitle.textContent = config.title;
@@ -311,6 +327,38 @@
 
         const hidePopup = () => popupModal.classList.add('hidden');
         
+        const showBalanceBreakdown = () => {
+            const locations = {};
+            const incomeTransactions = transactions.filter(t => t.type === 'pemasukan' && t.disimpanDi);
+
+            if (incomeTransactions.length === 0) {
+                balanceBreakdownList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada data pemasukan yang tercatat di lokasi tertentu.</p>`;
+            } else {
+                incomeTransactions.forEach(t => {
+                    const location = t.disimpanDi.trim();
+                    if (locations[location]) {
+                        locations[location] += t.jumlah;
+                    } else {
+                        locations[location] = t.jumlah;
+                    }
+                });
+
+                balanceBreakdownList.innerHTML = Object.entries(locations)
+                    .sort(([, a], [, b]) => b - a) // Sort by amount descending
+                    .map(([location, amount]) => `
+                        <div class="flex justify-between items-center text-sm p-3 bg-gray-50 rounded-lg">
+                            <span class="font-medium text-gray-700">${location}</span>
+                            <span class="font-bold text-gray-900">${formatRupiah(amount)}</span>
+                        </div>
+                    `).join('');
+            }
+
+            balanceBreakdownModal.classList.remove('hidden');
+            feather.replace();
+        };
+
+        const closeBalanceModal = () => balanceBreakdownModal.classList.add('hidden');
+
         // --- AUTHENTICATION & DATA HANDLING (functions are mostly the same)
         const setAuthButtonsLoading = (isLoading) => authButtons.forEach(btn => btn.disabled = isLoading);
         const handleLogin = async (e) => {
@@ -510,6 +558,13 @@
                     reader.readAsDataURL(e.target.files[0]);
                 } else preview.classList.add('hidden');
             });
+        });
+        saldoCard.addEventListener('click', showBalanceBreakdown);
+        closeBalanceModalBtn.addEventListener('click', closeBalanceModal);
+        balanceBreakdownModal.addEventListener('click', e => {
+            if (e.target === balanceBreakdownModal) {
+                closeBalanceModal();
+            }
         });
         
         // --- Rendering Functions ---
