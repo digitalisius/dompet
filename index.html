@@ -336,21 +336,46 @@
             } else {
                 incomeTransactions.forEach(t => {
                     const location = t.disimpanDi.trim();
-                    if (locations[location]) {
-                        locations[location] += t.jumlah;
-                    } else {
-                        locations[location] = t.jumlah;
+                    if (!locations[location]) {
+                        locations[location] = { suami: 0, istri: 0, total: 0 };
                     }
+                    if (t.oleh.toLowerCase() === 'suami') {
+                        locations[location].suami += t.jumlah;
+                    } else if (t.oleh.toLowerCase() === 'istri') {
+                        locations[location].istri += t.jumlah;
+                    }
+                    locations[location].total += t.jumlah;
                 });
 
                 balanceBreakdownList.innerHTML = Object.entries(locations)
-                    .sort(([, a], [, b]) => b - a) // Sort by amount descending
-                    .map(([location, amount]) => `
-                        <div class="flex justify-between items-center text-sm p-3 bg-gray-50 rounded-lg">
-                            <span class="font-medium text-gray-700">${location}</span>
-                            <span class="font-bold text-gray-900">${formatRupiah(amount)}</span>
-                        </div>
-                    `).join('');
+                    .sort(([, a], [, b]) => b.total - a.total) // Sort by total amount descending
+                    .map(([location, data]) => {
+                        let subItems = '';
+                        if (data.suami > 0) {
+                            subItems += `
+                                <div class="flex justify-between">
+                                    <span>Suami:</span>
+                                    <span>${formatRupiah(data.suami)}</span>
+                                </div>`;
+                        }
+                        if (data.istri > 0) {
+                            subItems += `
+                                <div class="flex justify-between">
+                                    <span>Istri:</span>
+                                    <span>${formatRupiah(data.istri)}</span>
+                                </div>`;
+                        }
+
+                        return `
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center text-sm mb-2">
+                                    <span class="font-medium text-gray-700">${location}</span>
+                                    <span class="font-bold text-gray-900">${formatRupiah(data.total)}</span>
+                                </div>
+                                ${ subItems ? `<div class="pl-4 border-l-2 border-gray-200 space-y-1 text-xs text-gray-600">${subItems}</div>` : '' }
+                            </div>
+                        `;
+                    }).join('');
             }
 
             balanceBreakdownModal.classList.remove('hidden');
@@ -733,4 +758,3 @@
     </script>
 </body>
 </html>
-
