@@ -146,16 +146,18 @@
                     <div class="relative h-80"><canvas id="financialChart"></canvas></div>
                 </div>
                 <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80">
-                    <h2 class="text-lg font-bold mb-4">Transaksi Terakhir</h2>
-                    <div id="recent-transactions-list" class="space-y-3"><p class="text-gray-500 text-center py-4">Belum ada transaksi.</p></div>
+                    <h2 class="text-lg font-bold mb-4">Aktivitas Terakhir</h2>
+                    <div id="recent-transactions-list" class="space-y-3"><p class="text-gray-500 text-center py-4">Belum ada aktivitas.</p></div>
                 </div>
             </div>
             <div id="input-page" class="page hidden">
                  <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80">
                     <div class="flex border-b border-gray-200 mb-6">
-                        <button id="pemasukan-tab" onclick="switchForm('pemasukan')" class="input-tab py-2 px-4 font-semibold border-b-2 border-transparent">Pemasukan</button>
-                        <button id="pengeluaran-tab" onclick="switchForm('pengeluaran')" class="input-tab py-2 px-4 font-semibold border-b-2 border-transparent text-gray-500">Pengeluaran</button>
+                        <button id="pemasukan-tab" onclick="switchForm('pemasukan')" class="input-tab py-2 px-4 font-semibold border-b-2">Pemasukan</button>
+                        <button id="pengeluaran-tab" onclick="switchForm('pengeluaran')" class="input-tab py-2 px-4 font-semibold border-b-2 text-gray-500">Pengeluaran</button>
+                        <button id="transfer-tab" onclick="switchForm('transfer')" class="input-tab py-2 px-4 font-semibold border-b-2 text-gray-500">Transfer Dana</button>
                     </div>
+                    
                     <form id="form-pemasukan" class="space-y-5">
                         <h2 class="text-lg font-bold text-green-600">Formulir Uang Masuk</h2>
                         <div><label for="pemasukan-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="pemasukan-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
@@ -168,6 +170,7 @@
                             <span>Simpan Pemasukan</span>
                         </button>
                     </form>
+
                     <form id="form-pengeluaran" class="space-y-5 hidden">
                         <h2 class="text-lg font-bold text-red-600">Formulir Uang Keluar</h2>
                         <div><label for="pengeluaran-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="pengeluaran-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
@@ -177,6 +180,26 @@
                         <div><label for="pengeluaran-oleh" class="block text-sm font-medium text-gray-700 mb-1">Dibayar Oleh</label><select id="pengeluaran-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select></div>
                         <div><label for="pengeluaran-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Nota (Opsional)</label><input type="file" id="pengeluaran-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"><img id="pengeluaran-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" /></div>
                         <button type="submit" id="pengeluaran-submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-red-300">Simpan Pengeluaran</button>
+                    </form>
+
+                    <form id="form-transfer" class="space-y-5 hidden">
+                        <h2 class="text-lg font-bold text-blue-600">Formulir Transfer Dana</h2>
+                        <div><label for="transfer-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="transfer-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
+                        <div><label for="transfer-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label><input type="number" id="transfer-jumlah" placeholder="Contoh: 500000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="transfer-dari-oleh" class="block text-sm font-medium text-gray-700 mb-1">Dari Dana</label>
+                                <select id="transfer-dari-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select>
+                            </div>
+                            <div>
+                                <label for="transfer-ke-oleh" class="block text-sm font-medium text-gray-700 mb-1">Ke Dana</label>
+                                <select id="transfer-ke-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Istri</option><option>Suami</option></select>
+                            </div>
+                        </div>
+                        <div><label for="transfer-dari" class="block text-sm font-medium text-gray-700 mb-1">Dari Lokasi</label><input type="text" id="transfer-dari" placeholder="Contoh: Bank BCA" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
+                        <div><label for="transfer-ke" class="block text-sm font-medium text-gray-700 mb-1">Ke Lokasi</label><input type="text" id="transfer-ke" placeholder="Contoh: Gopay" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
+                        <div><label for="transfer-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan (Opsional)</label><input type="text" id="transfer-keterangan" placeholder="Contoh: Isi saldo Gopay" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
+                        <button type="submit" id="transfer-submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300">Simpan Transfer</button>
                     </form>
                 </div>
             </div>
@@ -198,7 +221,7 @@
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left text-gray-600">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50"><tr><th scope="col" class="px-6 py-3 rounded-l-lg">Tanggal</th><th scope="col" class="px-6 py-3">Keterangan</th><th scope="col" class="px-6 py-3">Tipe</th><th scope="col" class="px-6 py-3">Jumlah</th><th scope="col" class="px-6 py-3">Oleh</th><th scope="col" class="px-6 py-3 text-center rounded-r-lg">Aksi</th></tr></thead>
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50"><tr><th scope="col" class="px-6 py-3 rounded-l-lg">Tanggal</th><th scope="col" class="px-6 py-3">Keterangan</th><th scope="col" class="px-6 py-3">Tipe</th><th scope="col" class="px-6 py-3">Jumlah</th><th scope="col" class="px-6 py-3 text-center rounded-r-lg">Aksi</th></tr></thead>
                                 <tbody id="laporan-tabel"></tbody>
                             </table>
                         </div>
@@ -231,8 +254,8 @@
     <div id="balance-breakdown-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 relative animate-scale-in">
             <button id="close-balance-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i data-feather="x" class="w-6 h-6"></i></button>
-            <h3 class="text-xl font-bold mb-4 text-gray-800">Rincian Saldo</h3>
-            <p class="text-sm text-gray-500 mb-4">Berikut adalah total pemasukan berdasarkan lokasi penyimpanan. Pengeluaran mengurangi saldo total secara keseluruhan.</p>
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Rincian Saldo per Lokasi</h3>
+            <p class="text-sm text-gray-500 mb-4">Menghitung total dana berdasarkan pemasukan, pengeluaran, dan perpindahan dana yang tercatat.</p>
             <div id="balance-breakdown-list" class="space-y-3 max-h-60 overflow-y-auto">
                 <!-- List will be generated here -->
             </div>
@@ -274,7 +297,6 @@
         // --- DOM ELEMENTS ---
         const loginPage = document.getElementById('login-page');
         const appContainer = document.getElementById('app-container');
-        const logoutBtn = document.getElementById('logout-btn');
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
         const authError = document.getElementById('auth-error');
@@ -295,7 +317,6 @@
         const balanceBreakdownModal = document.getElementById('balance-breakdown-modal');
         const closeBalanceModalBtn = document.getElementById('close-balance-modal-btn');
         const balanceBreakdownList = document.getElementById('balance-breakdown-list');
-        const saldoCard = document.getElementById('saldo-card');
 
         // --- UI FUNCTIONS ---
         const showPopup = (config) => {
@@ -329,43 +350,56 @@
         
         const showBalanceBreakdown = () => {
             const locations = {};
-            const incomeTransactions = transactions.filter(t => t.type === 'pemasukan' && t.disimpanDi);
+            
+            transactions.slice().reverse().forEach(t => {
+                const initLocation = (loc) => {
+                    if (!locations[loc]) {
+                        locations[loc] = { suami: 0, istri: 0, total: 0 };
+                    }
+                };
 
-            if (incomeTransactions.length === 0) {
-                balanceBreakdownList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada data pemasukan yang tercatat di lokasi tertentu.</p>`;
+                if (t.type === 'pemasukan' && t.disimpanDi) {
+                    const loc = t.disimpanDi.trim();
+                    initLocation(loc);
+                    const owner = t.oleh.toLowerCase();
+                    locations[loc][owner] += t.jumlah;
+                    locations[loc].total += t.jumlah;
+                } else if (t.type === 'pengeluaran') {
+                    // This is a simplified breakdown of assets. We assume expenses reduce the total pool
+                    // rather than trying to figure out which specific location/person it came from.
+                    // The main "Saldo Saat Ini" card already reflects the correct total after expenses.
+                }
+                else if (t.type === 'transfer') {
+                    const fromLoc = t.dari.trim();
+                    const toLoc = t.ke.trim();
+                    initLocation(fromLoc);
+                    initLocation(toLoc);
+
+                    const fromOwner = t.dariOleh.toLowerCase();
+                    const toOwner = t.keOleh.toLowerCase();
+
+                    locations[fromLoc].total -= t.jumlah;
+                    locations[toLoc].total += t.jumlah;
+                    
+                    locations[fromLoc][fromOwner] -= t.jumlah;
+                    locations[toLoc][toOwner] += t.jumlah;
+                }
+            });
+
+            const hasData = Object.values(locations).some(loc => loc.total > 0.01);
+
+            if (!hasData) {
+                balanceBreakdownList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada dana yang tersimpan di lokasi tertentu.</p>`;
             } else {
-                incomeTransactions.forEach(t => {
-                    const location = t.disimpanDi.trim();
-                    if (!locations[location]) {
-                        locations[location] = { suami: 0, istri: 0, total: 0 };
-                    }
-                    if (t.oleh.toLowerCase() === 'suami') {
-                        locations[location].suami += t.jumlah;
-                    } else if (t.oleh.toLowerCase() === 'istri') {
-                        locations[location].istri += t.jumlah;
-                    }
-                    locations[location].total += t.jumlah;
-                });
-
                 balanceBreakdownList.innerHTML = Object.entries(locations)
-                    .sort(([, a], [, b]) => b.total - a.total) // Sort by total amount descending
+                    .sort(([, a], [, b]) => b.total - a.total)
                     .map(([location, data]) => {
+                        if (data.total <= 0.01) return ''; // Skip locations with zero or negative balance
+                        
                         let subItems = '';
-                        if (data.suami > 0) {
-                            subItems += `
-                                <div class="flex justify-between">
-                                    <span>Suami:</span>
-                                    <span>${formatRupiah(data.suami)}</span>
-                                </div>`;
-                        }
-                        if (data.istri > 0) {
-                            subItems += `
-                                <div class="flex justify-between">
-                                    <span>Istri:</span>
-                                    <span>${formatRupiah(data.istri)}</span>
-                                </div>`;
-                        }
-
+                        if (data.suami !== 0) subItems += `<div class="flex justify-between"><span>Dana Suami:</span><span>${formatRupiah(data.suami)}</span></div>`;
+                        if (data.istri !== 0) subItems += `<div class="flex justify-between"><span>Dana Istri:</span><span>${formatRupiah(data.istri)}</span></div>`;
+                        
                         return `
                             <div class="p-3 bg-gray-50 rounded-lg">
                                 <div class="flex justify-between items-center text-sm mb-2">
@@ -377,14 +411,13 @@
                         `;
                     }).join('');
             }
-
             balanceBreakdownModal.classList.remove('hidden');
             feather.replace();
         };
 
         const closeBalanceModal = () => balanceBreakdownModal.classList.add('hidden');
 
-        // --- AUTHENTICATION & DATA HANDLING (functions are mostly the same)
+        // --- AUTH & DATA LOGIC ---
         const setAuthButtonsLoading = (isLoading) => authButtons.forEach(btn => btn.disabled = isLoading);
         const handleLogin = async (e) => {
             e.preventDefault(); setAuthButtonsLoading(true); isNewLogin = true;
@@ -469,35 +502,45 @@
         };
         const handleFormSubmit = async (e) => {
             e.preventDefault();
-            const form = e.target; const isPemasukan = form.id.includes('pemasukan');
+            const form = e.target; 
+            const isPemasukan = form.id === 'form-pemasukan';
+            const isPengeluaran = form.id === 'form-pengeluaran';
+            const isTransfer = form.id === 'form-transfer';
             showPopup({ title: editingTransactionId ? 'Memperbarui...' : 'Menyimpan...', message: 'Mohon tunggu sebentar.', icon: 'loading' });
+            
             try {
                 let transactionData = {
-                    type: isPemasukan ? 'pemasukan' : 'pengeluaran',
                     tanggal: form.querySelector('[type=date]').value,
                     jumlah: parseFloat(form.querySelector('[type=number]').value),
-                    keterangan: form.querySelector('input[id*="-keterangan"]').value,
-                    oleh: form.querySelector('select[id*="-oleh"]').value,
-                    foto: null
+                    keterangan: form.querySelector('input[id*="-keterangan"]').value || ''
                 };
 
-                const fotoInput = isPemasukan ? document.getElementById('pemasukan-foto') : document.getElementById('pengeluaran-foto');
-                if (fotoInput.files && fotoInput.files[0]) {
-                    transactionData.foto = await uploadToCloudinary(fotoInput.files[0]);
-                } else if(editingTransactionId) {
-                    const oldTransaction = transactions.find(t => t.id === editingTransactionId);
-                    transactionData.foto = oldTransaction.foto || null;
+                if (isPemasukan || isPengeluaran) {
+                    transactionData.type = isPemasukan ? 'pemasukan' : 'pengeluaran';
+                    transactionData.oleh = form.querySelector('select[id*="-oleh"]').value;
+                    transactionData.foto = null;
+
+                    const fotoInput = form.querySelector('input[type=file]');
+                    if (fotoInput && fotoInput.files && fotoInput.files[0]) {
+                        transactionData.foto = await uploadToCloudinary(fotoInput.files[0]);
+                    } else if(editingTransactionId) {
+                        const oldTransaction = transactions.find(t => t.id === editingTransactionId);
+                        transactionData.foto = oldTransaction.foto || null;
+                    }
+                    if (isPemasukan) transactionData.disimpanDi = document.getElementById('pemasukan-disimpan').value;
+                    else transactionData.kategori = document.getElementById('pengeluaran-kategori').value;
+                } else if (isTransfer) {
+                    transactionData.type = 'transfer';
+                    transactionData.dari = document.getElementById('transfer-dari').value;
+                    transactionData.ke = document.getElementById('transfer-ke').value;
+                    transactionData.dariOleh = document.getElementById('transfer-dari-oleh').value;
+                    transactionData.keOleh = document.getElementById('transfer-ke-oleh').value;
                 }
 
-                if (isPemasukan) transactionData.disimpanDi = document.getElementById('pemasukan-disimpan').value;
-                else transactionData.kategori = document.getElementById('pengeluaran-kategori').value;
-
                 if (editingTransactionId) {
-                    const docRef = doc(db, 'users', currentUser.uid, 'transactions', editingTransactionId);
-                    await updateDoc(docRef, { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
+                    await updateDoc(doc(db, 'users', currentUser.uid, 'transactions', editingTransactionId), { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
                 } else {
-                    const colRef = collection(db, 'users', currentUser.uid, 'transactions');
-                    await addDoc(colRef, { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
+                    await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
                 }
                 
                 resetInputForms();
@@ -509,9 +552,7 @@
         };
         const handleDeleteTransaction = (transactionId) => {
             showPopup({
-                title: 'Konfirmasi Hapus',
-                message: 'Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.',
-                icon: 'error',
+                title: 'Konfirmasi Hapus', message: 'Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.', icon: 'error',
                 buttons: [
                     { text: 'Batal', class: 'bg-gray-200 hover:bg-gray-300 text-gray-800' },
                     { text: 'Ya, Hapus', class: 'bg-red-600 hover:bg-red-700 text-white', action: async () => {
@@ -519,7 +560,6 @@
                             await deleteDoc(doc(db, 'users', currentUser.uid, 'transactions', transactionId));
                             showPopup({title: 'Dihapus', message: 'Transaksi telah dihapus.', icon: 'success', buttons: [{text: 'OK'}]});
                         } catch (error) {
-                            console.error("Delete error:", error);
                             showPopup({title: 'Gagal', message: 'Gagal menghapus transaksi.', icon: 'error', buttons: [{text: 'Tutup'}]});
                         }
                     }}
@@ -534,40 +574,48 @@
             const form = document.getElementById(`form-${t.type}`);
             form.querySelector('[type=date]').value = new Date(t.tanggal.getTime() - (t.tanggal.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
             form.querySelector('[type=number]').value = t.jumlah;
-            form.querySelector('input[id*="-keterangan"]').value = t.keterangan;
-            form.querySelector('select[id*="-oleh"]').value = t.oleh;
-            if (t.type === 'pemasukan') {
-                form.querySelector('input[id*="-disimpan"]').value = t.disimpanDi;
-                document.getElementById('pemasukan-submit-btn').firstElementChild.textContent = "Perbarui Pemasukan";
-            } else {
-                form.querySelector('select[id*="-kategori"]').value = t.kategori;
-                document.getElementById('pengeluaran-submit-btn').textContent = "Perbarui Pengeluaran";
-            }
-            const preview = document.getElementById(`${t.type}-preview`);
-            if (t.foto) {
-                preview.src = t.foto;
-                preview.classList.remove('hidden');
-            } else {
-                preview.classList.add('hidden');
+            form.querySelector('input[id*="-keterangan"]').value = t.keterangan || '';
+            
+            if (t.type === 'pemasukan' || t.type === 'pengeluaran') {
+                form.querySelector('select[id*="-oleh"]').value = t.oleh;
+                const preview = document.getElementById(`${t.type}-preview`);
+                if (t.foto) { preview.src = t.foto; preview.classList.remove('hidden'); }
+                else { preview.classList.add('hidden'); }
+                
+                if (t.type === 'pemasukan') {
+                    form.querySelector('input[id*="-disimpan"]').value = t.disimpanDi;
+                    document.getElementById('pemasukan-submit-btn').firstElementChild.textContent = "Perbarui Pemasukan";
+                } else {
+                    form.querySelector('select[id*="-kategori"]').value = t.kategori;
+                    document.getElementById('pengeluaran-submit-btn').textContent = "Perbarui Pengeluaran";
+                }
+            } else if (t.type === 'transfer') {
+                 form.querySelector('input[id*="-dari"]').value = t.dari;
+                 form.querySelector('input[id*="-ke"]').value = t.ke;
+                 form.querySelector('#transfer-dari-oleh').value = t.dariOleh;
+                 form.querySelector('#transfer-ke-oleh').value = t.keOleh;
+                 document.getElementById('transfer-submit-btn').textContent = "Perbarui Transfer";
             }
         };
         const resetInputForms = () => {
             editingTransactionId = null;
-            document.getElementById('form-pemasukan').reset();
-            document.getElementById('form-pengeluaran').reset();
-            document.getElementById('pemasukan-preview').classList.add('hidden');
-            document.getElementById('pengeluaran-preview').classList.add('hidden');
+            ['form-pemasukan', 'form-pengeluaran', 'form-transfer'].forEach(id => document.getElementById(id).reset());
+            ['pemasukan-preview', 'pengeluaran-preview'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('pemasukan-submit-btn').firstElementChild.textContent = "Simpan Pemasukan";
             document.getElementById('pengeluaran-submit-btn').textContent = "Simpan Pengeluaran";
+            document.getElementById('transfer-submit-btn').textContent = "Simpan Transfer";
         };
+
         // --- EVENT LISTENERS ---
+        document.getElementById('logout-btn').addEventListener('click', logOut);
         loginForm.addEventListener('submit', handleLogin);
         registerForm.addEventListener('submit', handleRegister);
-        logoutBtn.addEventListener('click', logOut);
         showRegisterBtn.addEventListener('click', () => toggleAuthForms('register'));
         showLoginBtn.addEventListener('click', () => toggleAuthForms('login'));
         document.getElementById('form-pemasukan').addEventListener('submit', handleFormSubmit);
         document.getElementById('form-pengeluaran').addEventListener('submit', handleFormSubmit);
+        document.getElementById('form-transfer').addEventListener('submit', handleFormSubmit);
+        
         document.getElementById('laporan-tabel').addEventListener('click', e => {
             const editBtn = e.target.closest('.edit-btn');
             const deleteBtn = e.target.closest('.delete-btn');
@@ -584,13 +632,9 @@
                 } else preview.classList.add('hidden');
             });
         });
-        saldoCard.addEventListener('click', showBalanceBreakdown);
+        document.getElementById('saldo-card').addEventListener('click', showBalanceBreakdown);
         closeBalanceModalBtn.addEventListener('click', closeBalanceModal);
-        balanceBreakdownModal.addEventListener('click', e => {
-            if (e.target === balanceBreakdownModal) {
-                closeBalanceModal();
-            }
-        });
+        balanceBreakdownModal.addEventListener('click', e => { if (e.target === balanceBreakdownModal) closeBalanceModal(); });
         
         // --- Rendering Functions ---
         const pages = document.querySelectorAll('.page'); const navBtns = document.querySelectorAll('.nav-btn');
@@ -600,35 +644,46 @@
             navBtns.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`button[onclick="showPage('${pageId}')"]`).classList.add('active');
             if (pageId === 'laporan') renderLaporan();
-            if (pageId === 'input' && editingTransactionId) {
-                // If not editing, reset forms
-            } else if (pageId === 'input') {
-                resetInputForms();
-            }
+            if (pageId !== 'input' || !editingTransactionId) resetInputForms();
         };
         const inputTabs = document.querySelectorAll('.input-tab');
         const switchForm = (formType) => {
-            document.getElementById('form-pemasukan').classList.toggle('hidden', formType !== 'pemasukan');
-            document.getElementById('form-pengeluaran').classList.toggle('hidden', formType !== 'pengeluaran');
-            inputTabs.forEach(tab => tab.classList.remove('active', 'text-gray-500'));
-            const activeTab = document.getElementById(`${formType}-tab`); activeTab.classList.add('active');
-            document.getElementById(formType === 'pemasukan' ? 'pengeluaran-tab' : 'pemasukan-tab').classList.add('text-gray-500');
+            ['pemasukan', 'pengeluaran', 'transfer'].forEach(type => {
+                document.getElementById(`form-${type}`).classList.toggle('hidden', type !== formType);
+                document.getElementById(`${type}-tab`).classList.toggle('active', type === formType);
+                document.getElementById(`${type}-tab`).classList.toggle('text-gray-500', type !== formType);
+            });
         };
         const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
-        const renderDashboard = () => { /* ... unchanged ... */ 
+        const renderDashboard = () => {
             const totalPemasukan = transactions.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0);
             const totalPengeluaran = transactions.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
             document.getElementById('total-pemasukan').textContent = formatRupiah(totalPemasukan);
             document.getElementById('total-pengeluaran').textContent = formatRupiah(totalPengeluaran);
             document.getElementById('saldo-saat-ini').textContent = formatRupiah(totalPemasukan - totalPengeluaran);
+            
             const recentList = document.getElementById('recent-transactions-list'); recentList.innerHTML = '';
-            if (transactions.length === 0) { recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada transaksi.</p>`; return; }
+            if (transactions.length === 0) { recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada aktivitas.</p>`; return; }
+            
             transactions.slice(0, 5).forEach(t => {
-                const isIncome = t.type === 'pemasukan';
                 const item = document.createElement('div');
                 item.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors';
                 item.setAttribute('data-transaction-id', t.id);
-                item.innerHTML = `<div class="flex items-center space-x-3 pointer-events-none"><div class="p-2 rounded-full ${isIncome ? 'bg-green-100' : 'bg-red-100'}"><i data-feather="${isIncome ? 'chevrons-down' : 'chevrons-up'}" class="w-5 h-5 ${isIncome ? 'text-green-600' : 'text-red-600'}"></i></div><div><p class="font-semibold text-gray-800">${t.keterangan}</p><p class="text-xs text-gray-500">${t.tanggal.toLocaleDateString('id-ID', {day: 'numeric', month: 'long'})}</p></div></div><p class="font-bold ${isIncome ? 'text-green-600' : 'text-red-600'} pointer-events-none">${formatRupiah(t.jumlah)}</p>`;
+                let iconHtml, textHtml, amountHtml;
+                if (t.type === 'pemasukan') {
+                    iconHtml = `<div class="p-2 rounded-full bg-green-100"><i data-feather="chevrons-down" class="w-5 h-5 text-green-600"></i></div>`;
+                    textHtml = `<p class="font-semibold text-gray-800">${t.keterangan}</p><p class="text-xs text-gray-500">${t.tanggal.toLocaleDateString('id-ID', {day: 'numeric', month: 'long'})}</p>`;
+                    amountHtml = `<p class="font-bold text-green-600">${formatRupiah(t.jumlah)}</p>`;
+                } else if (t.type === 'pengeluaran') {
+                    iconHtml = `<div class="p-2 rounded-full bg-red-100"><i data-feather="chevrons-up" class="w-5 h-5 text-red-600"></i></div>`;
+                    textHtml = `<p class="font-semibold text-gray-800">${t.keterangan}</p><p class="text-xs text-gray-500">${t.tanggal.toLocaleDateString('id-ID', {day: 'numeric', month: 'long'})}</p>`;
+                    amountHtml = `<p class="font-bold text-red-600">${formatRupiah(t.jumlah)}</p>`;
+                } else { // transfer
+                    iconHtml = `<div class="p-2 rounded-full bg-blue-100"><i data-feather="repeat" class="w-5 h-5 text-blue-600"></i></div>`;
+                    textHtml = `<p class="font-semibold text-gray-800">Transfer Dana</p><p class="text-xs text-gray-500">${t.dari} (${t.dariOleh}) → ${t.ke} (${t.keOleh})</p>`;
+                    amountHtml = `<p class="font-bold text-blue-600">${formatRupiah(t.jumlah)}</p>`;
+                }
+                item.innerHTML = `<div class="flex items-center space-x-3 pointer-events-none">${iconHtml}<div>${textHtml}</div></div>${amountHtml}`;
                 recentList.appendChild(item);
             });
             feather.replace();
@@ -653,15 +708,28 @@
             const pg = filtered.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
             document.getElementById('laporan-pemasukan').textContent = formatRupiah(p); document.getElementById('laporan-pengeluaran').textContent = formatRupiah(pg); document.getElementById('laporan-selisih').textContent = formatRupiah(p - pg);
             const tabelBody = document.getElementById('laporan-tabel'); tabelBody.innerHTML = '';
-            if (filtered.length === 0) { tabelBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-500">Tidak ada data untuk periode ini.</td></tr>`; return; }
+            if (filtered.length === 0) { tabelBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">Tidak ada data untuk periode ini.</td></tr>`; return; }
+            
             filtered.sort((a,b) => b.tanggal - a.tanggal).forEach(t => {
-                const isIncome = t.type === 'pemasukan';
-                const row = document.createElement('tr'); row.className = 'border-b border-gray-200/80 hover:bg-gray-50';
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200/80 hover:bg-gray-50';
+                
+                let keterangan, tipe, jumlah;
+                if (t.type === 'transfer') {
+                    keterangan = `Transfer: <b>${t.dari}</b> (${t.dariOleh}) → <b>${t.ke}</b> (${t.keOleh}) ${t.keterangan ? `<br><small class="text-gray-500">${t.keterangan}</small>` : ''}`;
+                    tipe = `<span class="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Transfer</span>`;
+                    jumlah = `<td class="px-6 py-4 font-semibold text-blue-600">${formatRupiah(t.jumlah)}</td>`;
+                } else {
+                    const isIncome = t.type === 'pemasukan';
+                    keterangan = `<span class="cursor-pointer" onclick="showTransactionDetails('${t.id}')">${t.keterangan} (${t.oleh})</span>`;
+                    tipe = `<span class="px-2 py-1 rounded-full text-xs font-semibold ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span>`;
+                    jumlah = `<td class="px-6 py-4 font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</td>`;
+                }
+
                 row.innerHTML = `<td class="px-6 py-4">${t.tanggal.toLocaleDateString('id-ID')}</td>
-                                 <td class="px-6 py-4 font-medium text-gray-900 cursor-pointer" onclick="showTransactionDetails('${t.id}')">${t.keterangan}</td>
-                                 <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs font-semibold ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td>
-                                 <td class="px-6 py-4 font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</td>
-                                 <td class="px-6 py-4">${t.oleh}</td>
+                                 <td class="px-6 py-4 font-medium text-gray-900">${keterangan}</td>
+                                 <td class="px-6 py-4">${tipe}</td>
+                                 ${jumlah}
                                  <td class="px-6 py-4 text-center">
                                     <button class="edit-btn p-1 text-indigo-500 hover:text-indigo-700" data-id="${t.id}"><i data-feather="edit-2" class="w-4 h-4 pointer-events-none"></i></button>
                                     <button class="delete-btn p-1 text-red-500 hover:text-red-700" data-id="${t.id}"><i data-feather="trash-2" class="w-4 h-4 pointer-events-none"></i></button>
@@ -671,47 +739,18 @@
             feather.replace();
         };
         const generatePDF = () => {
-            const { jsPDF } = window.jspdf;
-            const content = document.getElementById('laporan-content');
+            const { jsPDF } = window.jspdf; const content = document.getElementById('laporan-content');
             const bulan = document.getElementById('laporan-bulan').options[document.getElementById('laporan-bulan').selectedIndex].text;
             const tahun = document.getElementById('laporan-tahun').value;
-            
-            showPopup({ 
-                title: 'Mempersiapkan PDF...', 
-                message: 'Mohon tunggu, laporan sedang dibuat.', 
-                icon: 'loading' 
-            });
-
-            html2canvas(content, { 
-                scale: 2,
-                onclone: (document) => {
-                    // Hide action buttons during PDF generation
-                    document.querySelectorAll('#laporan-tabel button').forEach(btn => btn.style.display = 'none');
-                }
+            showPopup({ title: 'Mempersiapkan PDF...', message: 'Mohon tunggu, laporan sedang dibuat.', icon: 'loading' });
+            html2canvas(content, { scale: 2, onclone: (doc) => { doc.querySelectorAll('#laporan-tabel button').forEach(btn => btn.style.display = 'none'); }
             }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                
-                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight - 20); // Add some margins
+                const imgData = canvas.toDataURL('image/png'); const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight - 20);
                 pdf.save(`laporan-keuangan-${bulan}-${tahun}.pdf`);
-                
-                showPopup({
-                    title: 'PDF Siap!',
-                    message: 'Laporan Anda telah berhasil diunduh.',
-                    icon: 'success',
-                    buttons: [{ text: 'OK' }]
-                });
-            }).catch(err => {
-                console.error("PDF generation error:", err);
-                showPopup({
-                    title: 'Gagal',
-                    message: 'Terjadi kesalahan saat membuat PDF.',
-                    icon: 'error',
-                    buttons: [{ text: 'Tutup' }]
-                });
-            });
+                showPopup({ title: 'PDF Siap!', message: 'Laporan Anda telah berhasil diunduh.', icon: 'success', buttons: [{ text: 'OK' }] });
+            }).catch(err => { showPopup({ title: 'Gagal', message: 'Terjadi kesalahan saat membuat PDF.', icon: 'error', buttons: [{ text: 'Tutup' }] }); });
         };
         window.generatePDF = generatePDF;
         const setupLaporanFilters = () => {
@@ -727,23 +766,36 @@
         const initializeUI = () => {
             feather.replace(); showPage('beranda'); switchForm('pemasukan');
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('pemasukan-tanggal').value = today; document.getElementById('pengeluaran-tanggal').value = today;
+            document.getElementById('pemasukan-tanggal').value = today; document.getElementById('pengeluaran-tanggal').value = today; document.getElementById('transfer-tanggal').value = today;
             setupLaporanFilters(); window.showPage = showPage; window.switchForm = switchForm;
         };
         const modal = document.getElementById('detail-modal'); const closeModalBtn = document.getElementById('close-modal-btn');
         const showTransactionDetails = (transactionId) => {
             const t = transactions.find(tr => tr.id == transactionId); if (!t) return;
-            document.getElementById('modal-title').textContent = t.keterangan;
-            let detailsHtml = `<p><strong class="font-medium text-gray-500 w-28 inline-block">Jumlah:</strong> <span class="font-bold ${t.type === 'pemasukan' ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</span></p><p><strong class="font-medium text-gray-500 w-28 inline-block">Tanggal:</strong> ${t.tanggal.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p><p><strong class="font-medium text-gray-500 w-28 inline-block">Oleh:</strong> ${t.oleh}</p>`;
-            if (t.type === 'pemasukan') detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Disimpan di:</strong> ${t.disimpanDi}</p>`;
-            else detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Kategori:</strong> ${t.kategori}</p>`;
+            document.getElementById('modal-title').textContent = t.type === 'transfer' ? `Transfer Dana` : t.keterangan;
+            let detailsHtml = `<p><strong class="font-medium text-gray-500 w-28 inline-block">Jumlah:</strong> <span class="font-bold ${t.type === 'pemasukan' ? 'text-green-600' : t.type === 'pengeluaran' ? 'text-red-600' : 'text-blue-600'}">${formatRupiah(t.jumlah)}</span></p>
+                             <p><strong class="font-medium text-gray-500 w-28 inline-block">Tanggal:</strong> ${t.tanggal.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p>`;
+            if (t.type === 'pemasukan') {
+                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Oleh:</strong> ${t.oleh}</p>`;
+                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Disimpan di:</strong> ${t.disimpanDi}</p>`;
+            } else if (t.type === 'pengeluaran') {
+                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Oleh:</strong> ${t.oleh}</p>`;
+                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Kategori:</strong> ${t.kategori}</p>`;
+            } else if (t.type === 'transfer') {
+                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Dari Dana:</strong> ${t.dariOleh}</p>`;
+                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Dari Lokasi:</strong> ${t.dari}</p>`;
+                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Ke Dana:</strong> ${t.keOleh}</p>`;
+                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Ke Lokasi:</strong> ${t.ke}</p>`;
+            }
+            if(t.keterangan) detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Keterangan:</strong> ${t.keterangan}</p>`;
+
             document.getElementById('modal-body').innerHTML = detailsHtml;
             const modalImage = document.getElementById('modal-image');
             if (t.foto) { modalImage.src = t.foto; modalImage.parentElement.classList.remove('hidden'); }
             else { modalImage.src = ''; modalImage.parentElement.classList.add('hidden'); }
             modal.classList.remove('hidden'); feather.replace();
         };
-        window.showTransactionDetails = showTransactionDetails; // Make it globally accessible for inline onclick
+        window.showTransactionDetails = showTransactionDetails;
         const closeModal = () => modal.classList.add('hidden');
         closeModalBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
@@ -758,3 +810,4 @@
     </script>
 </body>
 </html>
+
