@@ -11,14 +11,13 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- jsPDF and html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- SheetJS (XLSX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
@@ -35,22 +34,68 @@
         ::-webkit-scrollbar-thumb:hover { background: #718096; }
         .input-tab.active { border-color: #4f46e5; color: #4f46e5; }
         .nav-btn.active { background-color: #eef2ff; color: #4338ca; }
+        .bottom-nav-btn.active { color: #4338ca; }
         .chart-nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .loader { border-top-color: #4f46e5; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .auth-btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        
+        #logo-text-shiny {
+            background: linear-gradient(to right, #4f46e5 20%, #a855f7 40%, #ec4899 60%, #4f46e5 80%);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: -200% center;
+            }
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 767px) {
+            body { padding-bottom: 70px; } /* Space for bottom nav */
+
+            #laporan-tabel thead { display: none; }
+            #laporan-tabel tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.75rem;
+                padding: 1rem;
+                background-color: #fff;
+                cursor: pointer;
+            }
+            #laporan-tabel td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #f1f5f9;
+                text-align: right;
+            }
+            #laporan-tabel td:last-child { border-bottom: none; }
+            #laporan-tabel td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+                margin-right: 1rem;
+                color: #475569;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Login Page -->
     <div id="login-page" class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="p-8 bg-white rounded-xl shadow-lg w-full max-w-sm">
-            <div class="text-center mb-8">
-                <div class="mx-auto mb-4 p-3 bg-indigo-600 text-white rounded-full w-fit">
-                    <i data-feather="dollar-sign" class="w-8 h-8"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-gray-900" id="auth-title">Login ke Akun Anda</h1>
+        <div class="p-6 sm:p-8 bg-white rounded-xl shadow-lg w-full max-w-sm mx-4">
+            <div class="text-center mb-6">
+                <h1 id="logo-text-shiny" class="text-4xl font-extrabold tracking-tight mb-4">DOMPETMU</h1>
+                <h2 class="text-xl font-bold text-gray-800" id="auth-title">Login ke Akun Anda</h2>
             </div>
             <div id="auth-error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4 text-sm hidden"></div>
             <form id="login-form" class="space-y-4">
@@ -88,24 +133,25 @@
     </div>
 
     <!-- App Container -->
-    <div id="app-container" class="hidden container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl">
-        <header class="bg-white/80 backdrop-blur-lg shadow-sm rounded-xl p-3 sm:p-4 mb-6 flex justify-between items-center sticky top-4 z-10 border border-gray-200/80">
+    <div id="app-container" class="hidden container mx-auto p-2 sm:p-4 md:p-6 lg:p-8 max-w-5xl">
+        <!-- Header for Desktop -->
+        <header class="hidden md:flex bg-white/80 backdrop-blur-lg shadow-sm rounded-xl p-3 sm:p-4 mb-6 justify-between items-center sticky top-4 z-10 border border-gray-200/80">
             <div class="flex items-center space-x-3">
                 <div id="user-initial" class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-sm"></div>
-                <h1 id="user-name" class="text-md font-bold text-gray-900 hidden sm:block"></h1>
+                <h1 id="user-name" class="text-md font-bold text-gray-900"></h1>
             </div>
             <nav class="flex items-center space-x-1 md:space-x-2">
                 <button onclick="showPage('beranda')" class="nav-btn group flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-600 hover:bg-gray-100">
                     <i data-feather="home" class="w-4 h-4"></i>
-                    <span class="hidden md:inline">Beranda</span>
+                    <span>Beranda</span>
                 </button>
                 <button onclick="showPage('input')" class="nav-btn group flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-600 hover:bg-gray-100">
                     <i data-feather="plus-circle" class="w-4 h-4"></i>
-                    <span class="hidden md:inline">Input Data</span>
+                    <span>Input Data</span>
                 </button>
                 <button onclick="showPage('laporan')" class="nav-btn group flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-600 hover:bg-gray-100">
                     <i data-feather="file-text" class="w-4 h-4"></i>
-                    <span class="hidden md:inline">Laporan</span>
+                    <span>Laporan</span>
                 </button>
                  <button id="logout-btn" class="group flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 text-red-500 hover:bg-red-50">
                     <i data-feather="log-out" class="w-4 h-4"></i>
@@ -211,7 +257,7 @@
                         <div class="flex items-center gap-2">
                             <select id="laporan-bulan" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></select>
                             <select id="laporan-tahun" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></select>
-                            <button onclick="generatePDF()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-3 rounded-lg flex items-center space-x-2 transition-all duration-300"><i data-feather="printer" class="w-4 h-4"></i><span class="hidden sm:inline">Cetak</span></button>
+                            <button onclick="generateXLSX()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg flex items-center space-x-2 transition-all duration-300"><i data-feather="file" class="w-4 h-4"></i><span class="hidden sm:inline">Cetak Excel</span></button>
                         </div>
                     </div>
                     <div id="laporan-content">
@@ -221,7 +267,7 @@
                             <div class="bg-indigo-50/70 p-4 rounded-lg"><p class="text-sm text-indigo-700">Selisih</p><p id="laporan-selisih" class="text-lg font-bold text-indigo-800">Rp 0</p></div>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left text-gray-600">
+                            <table id="laporan-tabel-container" class="w-full text-sm text-left text-gray-600">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50"><tr><th scope="col" class="px-6 py-3 rounded-l-lg">Tanggal</th><th scope="col" class="px-6 py-3">Keterangan</th><th scope="col" class="px-6 py-3">Tipe</th><th scope="col" class="px-6 py-3">Jumlah</th><th scope="col" class="px-6 py-3 text-center rounded-r-lg">Aksi</th></tr></thead>
                                 <tbody id="laporan-tabel"></tbody>
                             </table>
@@ -230,6 +276,26 @@
                 </div>
             </div>
         </main>
+
+        <!-- Bottom Nav for Mobile -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] flex justify-around p-2 z-20 rounded-t-2xl">
+            <button onclick="showPage('beranda')" class="bottom-nav-btn flex flex-col items-center justify-center text-gray-600 hover:text-indigo-600 p-2 w-full rounded-lg">
+                <i data-feather="home" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-medium">Beranda</span>
+            </button>
+            <button onclick="showPage('input')" class="bottom-nav-btn flex flex-col items-center justify-center text-gray-600 hover:text-indigo-600 p-2 w-full rounded-lg">
+                <i data-feather="plus-circle" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-medium">Input</span>
+            </button>
+            <button onclick="showPage('laporan')" class="bottom-nav-btn flex flex-col items-center justify-center text-gray-600 hover:text-indigo-600 p-2 w-full rounded-lg">
+                <i data-feather="file-text" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-medium">Laporan</span>
+            </button>
+            <button id="logout-btn-mobile" class="bottom-nav-btn flex flex-col items-center justify-center text-gray-600 hover:text-red-600 p-2 w-full rounded-lg">
+                <i data-feather="log-out" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-medium">Keluar</span>
+            </button>
+        </nav>
     </div>
 
     <!-- Modals -->
@@ -616,6 +682,7 @@
 
         // --- EVENT LISTENERS ---
         document.getElementById('logout-btn').addEventListener('click', logOut);
+        document.getElementById('logout-btn-mobile').addEventListener('click', logOut);
         loginForm.addEventListener('submit', handleLogin);
         registerForm.addEventListener('submit', handleRegister);
         showRegisterBtn.addEventListener('click', () => toggleAuthForms('register'));
@@ -627,8 +694,15 @@
         document.getElementById('laporan-tabel').addEventListener('click', e => {
             const editBtn = e.target.closest('.edit-btn');
             const deleteBtn = e.target.closest('.delete-btn');
-            if (editBtn) handleEditTransaction(editBtn.dataset.id);
-            if (deleteBtn) handleDeleteTransaction(deleteBtn.dataset.id);
+            const row = e.target.closest('tr[data-transaction-id]');
+
+            if (editBtn || deleteBtn) {
+                e.stopPropagation(); // Prevent row click when button is clicked
+                if (editBtn) handleEditTransaction(editBtn.dataset.id);
+                if (deleteBtn) handleDeleteTransaction(deleteBtn.dataset.id);
+            } else if (row) {
+                showTransactionDetails(row.dataset.transactionId);
+            }
         });
         ['pemasukan-foto', 'pengeluaran-foto'].forEach(id => {
             document.getElementById(id).addEventListener('change', e => {
@@ -645,12 +719,19 @@
         balanceBreakdownModal.addEventListener('click', e => { if (e.target === balanceBreakdownModal) closeBalanceModal(); });
         
         // --- Rendering Functions ---
-        const pages = document.querySelectorAll('.page'); const navBtns = document.querySelectorAll('.nav-btn');
+        const pages = document.querySelectorAll('.page'); const navBtns = document.querySelectorAll('.nav-btn'); const bottomNavBtns = document.querySelectorAll('.bottom-nav-btn');
         const showPage = (pageId) => {
             pages.forEach(p => p.classList.add('hidden'));
             document.getElementById(pageId + '-page').classList.remove('hidden');
-            navBtns.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`button[onclick="showPage('${pageId}')"]`).classList.add('active');
+            
+            const setActive = (btns) => {
+                 btns.forEach(btn => btn.classList.remove('active'));
+                 const activeBtn = Array.from(btns).find(btn => btn.getAttribute('onclick') === `showPage('${pageId}')`);
+                 if(activeBtn) activeBtn.classList.add('active');
+            }
+            setActive(navBtns);
+            setActive(bottomNavBtns);
+
             if (pageId === 'laporan') renderLaporan();
             if (pageId !== 'input' || !editingTransactionId) resetInputForms();
         };
@@ -720,26 +801,27 @@
             
             filtered.sort((a,b) => b.tanggal - a.tanggal).forEach(t => {
                 const row = document.createElement('tr');
-                row.className = 'border-b border-gray-200/80 hover:bg-gray-50';
+                row.className = 'border-b border-gray-200/80 hover:bg-gray-50 cursor-pointer';
+                row.setAttribute('data-transaction-id', t.id);
                 
-                let keterangan, tipe, jumlah;
+                let keterangan, tipe, jumlah, aksi;
                 if (t.type === 'transfer') {
                     keterangan = `Transfer: <b>${t.dari}</b> (${t.dariOleh}) → <b>${t.ke}</b> (${t.keOleh}) ${t.keterangan ? `<br><small class="text-gray-500">${t.keterangan}</small>` : ''}`;
                     tipe = `<span class="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Transfer</span>`;
-                    jumlah = `<td class="px-6 py-4 font-semibold text-blue-600">${formatRupiah(t.jumlah)}</td>`;
+                    jumlah = `${formatRupiah(t.jumlah)}`;
                 } else {
                     const isIncome = t.type === 'pemasukan';
                     let detailSumber = isIncome ? `Disimpan di: ${t.disimpanDi}` : `Dari: ${t.dariLokasi || '?'}`;
-                    keterangan = `<span class="cursor-pointer" onclick="showTransactionDetails('${t.id}')">${t.keterangan}</span><br><small class="text-gray-500">${detailSumber} (${t.oleh})</small>`;
+                    keterangan = `${t.keterangan}<br><small class="text-gray-500">${detailSumber} (${t.oleh})</small>`;
                     tipe = `<span class="px-2 py-1 rounded-full text-xs font-semibold ${isIncome ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span>`;
-                    jumlah = `<td class="px-6 py-4 font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}">${formatRupiah(t.jumlah)}</td>`;
+                    jumlah = `${formatRupiah(t.jumlah)}`;
                 }
 
-                row.innerHTML = `<td class="px-6 py-4">${t.tanggal.toLocaleDateString('id-ID')}</td>
-                                 <td class="px-6 py-4 font-medium text-gray-900">${keterangan}</td>
-                                 <td class="px-6 py-4">${tipe}</td>
-                                 ${jumlah}
-                                 <td class="px-6 py-4 text-center">
+                row.innerHTML = `<td data-label="Tanggal">${t.tanggal.toLocaleDateString('id-ID')}</td>
+                                 <td data-label="Keterangan">${keterangan}</td>
+                                 <td data-label="Tipe">${tipe}</td>
+                                 <td data-label="Jumlah" class="${t.type === 'pemasukan' ? 'text-green-600' : t.type === 'pengeluaran' ? 'text-red-600' : 'text-blue-600'} font-semibold">${jumlah}</td>
+                                 <td data-label="Aksi" class="text-center">
                                     <button class="edit-btn p-1 text-indigo-500 hover:text-indigo-700" data-id="${t.id}"><i data-feather="edit-2" class="w-4 h-4 pointer-events-none"></i></button>
                                     <button class="delete-btn p-1 text-red-500 hover:text-red-700" data-id="${t.id}"><i data-feather="trash-2" class="w-4 h-4 pointer-events-none"></i></button>
                                  </td>`;
@@ -747,21 +829,49 @@
             });
             feather.replace();
         };
-        const generatePDF = () => {
-            const { jsPDF } = window.jspdf; const content = document.getElementById('laporan-content');
-            const bulan = document.getElementById('laporan-bulan').options[document.getElementById('laporan-bulan').selectedIndex].text;
-            const tahun = document.getElementById('laporan-tahun').value;
-            showPopup({ title: 'Mempersiapkan PDF...', message: 'Mohon tunggu, laporan sedang dibuat.', icon: 'loading' });
-            html2canvas(content, { scale: 2, onclone: (doc) => { doc.querySelectorAll('#laporan-tabel button').forEach(btn => btn.style.display = 'none'); }
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png'); const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight - 20);
-                pdf.save(`laporan-keuangan-${bulan}-${tahun}.pdf`);
-                showPopup({ title: 'PDF Siap!', message: 'Laporan Anda telah berhasil diunduh.', icon: 'success', buttons: [{ text: 'OK' }] });
-            }).catch(err => { showPopup({ title: 'Gagal', message: 'Terjadi kesalahan saat membuat PDF.', icon: 'error', buttons: [{ text: 'Tutup' }] }); });
+        const generateXLSX = () => {
+            showPopup({ title: 'Mempersiapkan Excel...', message: 'Mohon tunggu, laporan sedang dibuat.', icon: 'loading' });
+            try {
+                const bulan = document.getElementById('laporan-bulan').options[document.getElementById('laporan-bulan').selectedIndex].text;
+                const tahun = document.getElementById('laporan-tahun').value;
+                const filtered = transactions.filter(t => t.tanggal.getMonth() == document.getElementById('laporan-bulan').value && t.tanggal.getFullYear() == tahun);
+
+                const dataToExport = filtered.sort((a,b) => a.tanggal - b.tanggal).map(t => {
+                    const base = {
+                        Tanggal: t.tanggal.toLocaleDateString('id-ID'),
+                        Tipe: t.type,
+                        Jumlah: t.jumlah,
+                        Keterangan: t.keterangan || '',
+                    };
+                    if (t.type === 'pemasukan') {
+                        return {...base, Oleh: t.oleh, "Disimpan Di": t.disimpanDi};
+                    } else if (t.type === 'pengeluaran') {
+                        return {...base, Oleh: t.oleh, "Dari Lokasi": t.dariLokasi, Kategori: t.kategori};
+                    } else { // transfer
+                        return { ...base, "Dari Dana": t.dariOleh, "Dari Lokasi": t.dari, "Ke Dana": t.keOleh, "Ke Lokasi": t.ke };
+                    }
+                });
+
+                if (dataToExport.length === 0) {
+                    showPopup({ title: 'Gagal', message: 'Tidak ada data untuk diekspor.', icon: 'error', buttons: [{ text: 'Tutup' }] });
+                    return;
+                }
+
+                const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+
+                // Auto-fit columns
+                const max_width = dataToExport.reduce((w, r) => Math.max(w, ...Object.values(r).map(val => String(val).length)), 10);
+                worksheet["!cols"] = Object.keys(dataToExport[0]).map(() => ({ wch: max_width + 2 }));
+
+                XLSX.writeFile(workbook, `laporan-keuangan-${bulan}-${tahun}.xlsx`);
+                showPopup({ title: 'Excel Siap!', message: 'Laporan Anda telah berhasil diunduh.', icon: 'success', buttons: [{ text: 'OK' }] });
+            } catch (err) {
+                 showPopup({ title: 'Gagal', message: 'Terjadi kesalahan saat membuat file Excel.', icon: 'error', buttons: [{ text: 'Tutup' }] });
+            }
         };
-        window.generatePDF = generatePDF;
+        window.generateXLSX = generateXLSX;
         const setupLaporanFilters = () => {
             const bulanSelect = document.getElementById('laporan-bulan'); const tahunSelect = document.getElementById('laporan-tahun');
             if(bulanSelect.options.length > 1) return; 
@@ -820,5 +930,4 @@
     </script>
 </body>
 </html>
-
 
