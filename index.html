@@ -59,7 +59,7 @@
         @media (max-width: 767px) {
             body { padding-bottom: 70px; } /* Space for bottom nav */
 
-            #laporan-tabel-container thead { display: none; } /* FIX: Corrected selector */
+            #laporan-tabel-container thead { display: none; }
             #laporan-tabel tr {
                 display: block;
                 margin-bottom: 1rem;
@@ -844,7 +844,10 @@
         };
         const renderLaporan = () => {
             const bulan = document.getElementById('laporan-bulan').value; const tahun = document.getElementById('laporan-tahun').value;
-            const filtered = transactions.filter(t => t.tanggal.getMonth() == bulan && t.tanggal.getFullYear() == tahun);
+            const filtered = transactions
+                .filter(t => t.tanggal.getMonth() == bulan && t.tanggal.getFullYear() == tahun)
+                .sort((a, b) => b.tanggal - a.tanggal);
+
             const p = filtered.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0);
             const pg = filtered.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
             document.getElementById('laporan-pemasukan').textContent = formatRupiah(p); document.getElementById('laporan-pengeluaran').textContent = formatRupiah(pg); document.getElementById('laporan-selisih').textContent = formatRupiah(p - pg);
