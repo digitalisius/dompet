@@ -252,12 +252,16 @@
             </div>
             <div id="laporan-page" class="page hidden">
                  <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
                         <h2 class="text-lg font-bold">Laporan Bulanan</h2>
-                        <div class="flex items-center gap-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                             <select id="laporan-bulan" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></select>
                             <select id="laporan-tahun" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></select>
-                            <button onclick="generateXLSX()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg flex items-center space-x-2 transition-all duration-300"><i data-feather="file" class="w-4 h-4"></i><span class="hidden sm:inline">Cetak Excel</span></button>
+                            <select id="laporan-urutkan" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <option value="tanggal">Urutkan: Tgl. Transaksi</option>
+                                <option value="createdAt">Urutkan: Tgl. Input</option>
+                            </select>
+                            <button onclick="generateXLSX()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-all duration-300"><i data-feather="file" class="w-4 h-4"></i><span class="hidden sm:inline">Ekspor Excel</span></button>
                         </div>
                     </div>
                     <div id="laporan-content">
@@ -605,9 +609,9 @@
         };
         const listenToTransactions = () => {
             if (!currentUser) return;
-            const q = query(collection(db, 'users', currentUser.uid, 'transactions'), orderBy('tanggal', 'desc'));
+            const q = query(collection(db, 'users', currentUser.uid, 'transactions'));
             unsubscribeFromFirestore = onSnapshot(q, (snapshot) => {
-                transactions = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, tanggal: doc.data().tanggal.toDate() }));
+                transactions = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, tanggal: doc.data().tanggal.toDate(), createdAt: doc.data().createdAt?.toDate() }));
                 renderAll();
             }, (error) => console.error("Gagal mengambil data:", error));
         };
@@ -629,7 +633,8 @@
                 let transactionData = {
                     tanggal: form.querySelector('[type=date]').value,
                     jumlah: parseFloat(form.querySelector('[type=number]').value),
-                    keterangan: form.querySelector('input[id*="-keterangan"]').value || ''
+                    keterangan: form.querySelector('input[id*="-keterangan"]').value || '',
+                    updatedAt: Timestamp.now()
                 };
 
                 if (isPemasukan || isPengeluaran) {
@@ -662,6 +667,7 @@
                 if (editingTransactionId) {
                     await updateDoc(doc(db, 'users', currentUser.uid, 'transactions', editingTransactionId), { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
                 } else {
+                    transactionData.createdAt = Timestamp.now();
                     await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
                 }
                 
@@ -804,9 +810,11 @@
             document.getElementById('saldo-saat-ini').textContent = formatRupiah(totalPemasukan - totalPengeluaran);
             
             const recentList = document.getElementById('recent-transactions-list'); recentList.innerHTML = '';
+            const sortedForRecent = transactions.slice().sort((a, b) => (b.createdAt || b.tanggal) - (a.createdAt || a.tanggal));
+
             if (transactions.length === 0) { recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada aktivitas.</p>`; return; }
             
-            transactions.slice(0, 5).forEach(t => {
+            sortedForRecent.slice(0, 5).forEach(t => {
                 const item = document.createElement('div');
                 item.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors';
                 item.setAttribute('data-transaction-id', t.id);
@@ -843,10 +851,18 @@
             document.getElementById('chart-prev-btn').disabled = startIndex === 0;
         };
         const renderLaporan = () => {
-            const bulan = document.getElementById('laporan-bulan').value; const tahun = document.getElementById('laporan-tahun').value;
-            const filtered = transactions
-                .filter(t => t.tanggal.getMonth() == bulan && t.tanggal.getFullYear() == tahun)
-                .sort((a, b) => b.tanggal - a.tanggal);
+            const bulan = document.getElementById('laporan-bulan').value; 
+            const tahun = document.getElementById('laporan-tahun').value;
+            const sortBy = document.getElementById('laporan-urutkan').value;
+            
+            let filtered = transactions
+                .filter(t => t.tanggal.getMonth() == bulan && t.tanggal.getFullYear() == tahun);
+
+            filtered.sort((a, b) => {
+                const dateA = sortBy === 'createdAt' ? a.createdAt || a.tanggal : a.tanggal;
+                const dateB = sortBy === 'createdAt' ? b.createdAt || b.tanggal : b.tanggal;
+                return dateB - dateA;
+            });
 
             const p = filtered.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0);
             const pg = filtered.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
@@ -867,7 +883,10 @@
                 row.className = 'border-b border-gray-200/80 hover:bg-gray-50 cursor-pointer';
                 row.setAttribute('data-transaction-id', t.id);
                 
-                let keterangan, tipe, jumlah;
+                let keterangan, tipe, jumlah, tanggal;
+
+                tanggal = `<span>${t.tanggal.toLocaleDateString('id-ID')}</span><small class="text-gray-400 block">${t.createdAt ? t.createdAt.toLocaleString('id-ID', {hour: '2-digit', minute: '2-digit'}) : ''}</small>`;
+
                 if (t.type === 'transfer') {
                     keterangan = `Transfer: <b>${t.dari}</b> (${t.dariOleh}) → <b>${t.ke}</b> (${t.keOleh}) ${t.keterangan ? `<br><small class="text-gray-500">${t.keterangan}</small>` : ''}`;
                     tipe = `<span class="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Transfer</span>`;
@@ -880,7 +899,7 @@
                     jumlah = `${formatRupiah(t.jumlah)}`;
                 }
 
-                row.innerHTML = `<td data-label="Tanggal">${t.tanggal.toLocaleDateString('id-ID')}</td>
+                row.innerHTML = `<td data-label="Tanggal">${tanggal}</td>
                                  <td data-label="Keterangan">${keterangan}</td>
                                  <td data-label="Tipe">${tipe}</td>
                                  <td data-label="Jumlah" class="${t.type === 'pemasukan' ? 'text-green-600' : t.type === 'pengeluaran' ? 'text-red-600' : 'text-blue-600'} font-semibold">${jumlah}</td>
@@ -923,7 +942,8 @@
 
                 const dataToExport = filtered.sort((a,b) => a.tanggal - b.tanggal).map(t => {
                     const base = {
-                        Tanggal: t.tanggal.toLocaleDateString('id-ID'),
+                        "Tanggal Transaksi": t.tanggal.toLocaleDateString('id-ID'),
+                        "Waktu Input": t.createdAt ? t.createdAt.toLocaleString('id-ID') : '',
                         Tipe: t.type,
                         Jumlah: t.jumlah,
                         Keterangan: t.keterangan || '',
@@ -958,14 +978,20 @@
         };
         window.generateXLSX = generateXLSX;
         const setupLaporanFilters = () => {
-            const bulanSelect = document.getElementById('laporan-bulan'); const tahunSelect = document.getElementById('laporan-tahun');
+            const bulanSelect = document.getElementById('laporan-bulan'); 
+            const tahunSelect = document.getElementById('laporan-tahun');
+            const urutkanSelect = document.getElementById('laporan-urutkan');
+
             if(bulanSelect.options.length > 1) return; 
             ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"].forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; bulanSelect.appendChild(o); });
             const currentYear = new Date().getFullYear();
             for (let i = currentYear; i >= currentYear - 5; i--) { const o = document.createElement('option'); o.value = i; o.textContent = i; tahunSelect.appendChild(o); }
             bulanSelect.value = new Date().getMonth(); tahunSelect.value = currentYear;
-            bulanSelect.addEventListener('change', () => { reportCurrentPage = 1; renderLaporan(); });
-            tahunSelect.addEventListener('change', () => { reportCurrentPage = 1; renderLaporan(); });
+            
+            const renderTrigger = () => { reportCurrentPage = 1; renderLaporan(); };
+            bulanSelect.addEventListener('change', renderTrigger);
+            tahunSelect.addEventListener('change', renderTrigger);
+            urutkanSelect.addEventListener('change', renderTrigger);
         };
         const renderAll = () => { renderDashboard(); renderChart(); if (!document.getElementById('laporan-page').classList.contains('hidden')) renderLaporan(); };
         const initializeUI = () => {
@@ -980,6 +1006,9 @@
             document.getElementById('modal-title').textContent = t.type === 'transfer' ? `Transfer Dana` : t.keterangan;
             let detailsHtml = `<p><strong class="font-medium text-gray-500 w-28 inline-block">Jumlah:</strong> <span class="font-bold ${t.type === 'pemasukan' ? 'text-green-600' : t.type === 'pengeluaran' ? 'text-red-600' : 'text-blue-600'}">${formatRupiah(t.jumlah)}</span></p>
                              <p><strong class="font-medium text-gray-500 w-28 inline-block">Tanggal:</strong> ${t.tanggal.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p>`;
+            if (t.createdAt) {
+                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Waktu Input:</strong> ${t.createdAt.toLocaleString('id-ID')}</p>`;
+            }
             if (t.type === 'pemasukan') {
                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Oleh:</strong> ${t.oleh}</p>`;
                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Disimpan di:</strong> ${t.disimpanDi}</p>`;
