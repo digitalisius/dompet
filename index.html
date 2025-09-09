@@ -103,6 +103,20 @@
                 justify-content: flex-end;
             }
         }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00; /* Placeholder */
+            animation: confetti-fall 2s linear infinite;
+            z-index: 50;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -178,6 +192,9 @@
 
         <main>
             <div id="beranda-page" class="page">
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80 mb-6">
+                    <p id="motivational-message" class="text-center font-medium text-gray-700"></p>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200/80 transition-transform hover:scale-[1.02] duration-300">
                         <div class="flex items-center space-x-4">
@@ -198,6 +215,31 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- New: Positive Challenge Card -->
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80 mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-bold text-indigo-600">Tantangan Positif Hari Ini</h2>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-indigo-100 rounded-full"><i data-feather="award" class="w-6 h-6 text-indigo-600"></i></div>
+                        <div>
+                            <p id="challenge-message" class="text-sm text-gray-700">Tantangan harianmu akan muncul di sini!</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- End New -->
+
+                <!-- New: Consistency Tracker -->
+                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80 mb-6">
+                    <h2 class="text-lg font-bold">Konsistensi Pencatatan (7 Hari Terakhir)</h2>
+                    <p class="text-sm text-gray-600 mb-2">Seberapa sering Anda mencatat dalam seminggu terakhir.</p>
+                    <div id="consistency-tracker" class="flex justify-between items-center space-x-1 sm:space-x-2">
+                        <!-- Indikator akan digenerate di sini -->
+                    </div>
+                </div>
+                <!-- End New -->
+
                 <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200/80 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold">Grafik Keuangan Bulanan</h2>
@@ -221,48 +263,116 @@
                         <button id="transfer-tab" onclick="switchForm('transfer')" class="input-tab py-2 px-4 font-semibold border-b-2 text-gray-500">Transfer Dana</button>
                     </div>
                     
-                    <form id="form-pemasukan" class="space-y-5">
+                    <form id="form-pemasukan" class="space-y-6">
                         <h2 class="text-lg font-bold text-green-600">Formulir Uang Masuk</h2>
-                        <div><label for="pemasukan-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="pemasukan-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pemasukan-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label><input type="number" id="pemasukan-jumlah" placeholder="Contoh: 5000000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pemasukan-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label><input type="text" id="pemasukan-keterangan" placeholder="Contoh: Gaji bulanan" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pemasukan-oleh" class="block text-sm font-medium text-gray-700 mb-1">Diterima Oleh</label><select id="pemasukan-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select></div>
-                        <div><label for="pemasukan-disimpan" class="block text-sm font-medium text-gray-700 mb-1">Disimpan di</label><input type="text" id="pemasukan-disimpan" placeholder="Contoh: Bank BCA, Gopay" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pemasukan-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti (Opsional)</label><input type="file" id="pemasukan-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"><img id="pemasukan-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" /></div>
-                        <button type="submit" id="pemasukan-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center space-x-2">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="pemasukan-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                                <input type="date" id="pemasukan-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                            <div>
+                                <label for="pemasukan-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
+                                <input type="number" id="pemasukan-jumlah" placeholder="Contoh: 5000000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="pemasukan-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label>
+                            <input type="text" id="pemasukan-keterangan" placeholder="Contoh: Gaji bulanan" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="pemasukan-oleh" class="block text-sm font-medium text-gray-700 mb-1">Diterima Oleh</label>
+                                <select id="pemasukan-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200"><option>Suami</option><option>Istri</option></select>
+                            </div>
+                            <div>
+                                <label for="pemasukan-disimpan" class="block text-sm font-medium text-gray-700 mb-1">Disimpan di</label>
+                                <input type="text" id="pemasukan-disimpan" placeholder="Contoh: Bank BCA, Gopay" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="pemasukan-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti (Opsional)</label>
+                            <input type="file" id="pemasukan-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 transition-all duration-200">
+                            <img id="pemasukan-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" />
+                        </div>
+                        <button type="submit" id="pemasukan-submit-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-green-300 flex items-center justify-center space-x-2">
                             <span>Simpan Pemasukan</span>
                         </button>
                     </form>
 
-                    <form id="form-pengeluaran" class="space-y-5 hidden">
+                    <form id="form-pengeluaran" class="space-y-6 hidden">
                         <h2 class="text-lg font-bold text-red-600">Formulir Uang Keluar</h2>
-                        <div><label for="pengeluaran-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="pengeluaran-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pengeluaran-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label><input type="number" id="pengeluaran-jumlah" placeholder="Contoh: 150000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pengeluaran-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label><input type="text" id="pengeluaran-keterangan" placeholder="Contoh: Belanja bulanan" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pengeluaran-kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label><select id="pengeluaran-kategori" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Makanan & Minuman</option><option>Transportasi</option><option>Tagihan</option><option>Hiburan</option><option>Pendidikan</option><option>Kesehatan</option><option>Lainnya</option></select></div>
-                        <div><label for="pengeluaran-oleh" class="block text-sm font-medium text-gray-700 mb-1">Dari Dana</label><select id="pengeluaran-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select></div>
-                        <div><label for="pengeluaran-dari-lokasi" class="block text-sm font-medium text-gray-700 mb-1">Dari Lokasi Dana</label><input type="text" id="pengeluaran-dari-lokasi" placeholder="Contoh: Bank BCA" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="pengeluaran-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Nota (Opsional)</label><input type="file" id="pengeluaran-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"><img id="pengeluaran-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" /></div>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="pengeluaran-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                                <input type="date" id="pengeluaran-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                            <div>
+                                <label for="pengeluaran-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
+                                <input type="number" id="pengeluaran-jumlah" placeholder="Contoh: 150000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="pengeluaran-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label>
+                            <input type="text" id="pengeluaran-keterangan" placeholder="Contoh: Belanja bulanan" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="pengeluaran-kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                                <select id="pengeluaran-kategori" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200"><option>Makanan & Minuman</option><option>Transportasi</option><option>Tagihan</option><option>Hiburan</option><option>Pendidikan</option><option>Kesehatan</option><option>Lainnya</option></select>
+                            </div>
+                            <div>
+                                <label for="pengeluaran-dari-lokasi" class="block text-sm font-medium text-gray-700 mb-1">Dari Lokasi Dana</label>
+                                <input type="text" id="pengeluaran-dari-lokasi" placeholder="Contoh: Bank BCA" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="pengeluaran-oleh" class="block text-sm font-medium text-gray-700 mb-1">Dari Dana</label>
+                            <select id="pengeluaran-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200"><option>Suami</option><option>Istri</option></select>
+                        </div>
+                        <div>
+                            <label for="pengeluaran-foto" class="block text-sm font-medium text-gray-700 mb-1">Upload Nota (Opsional)</label>
+                            <input type="file" id="pengeluaran-foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 transition-all duration-200">
+                            <img id="pengeluaran-preview" class="mt-3 rounded-lg max-h-40 hidden border border-gray-200" />
+                        </div>
                         <button type="submit" id="pengeluaran-submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-red-300">Simpan Pengeluaran</button>
                     </form>
 
-                    <form id="form-transfer" class="space-y-5 hidden">
+                    <form id="form-transfer" class="space-y-6 hidden">
                         <h2 class="text-lg font-bold text-blue-600">Formulir Transfer Dana</h2>
-                        <div><label for="transfer-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label><input type="date" id="transfer-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="transfer-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label><input type="number" id="transfer-jumlah" placeholder="Contoh: 500000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="transfer-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                                <input type="date" id="transfer-tanggal" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                            <div>
+                                <label for="transfer-jumlah" class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
+                                <input type="number" id="transfer-jumlah" placeholder="Contoh: 500000" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="transfer-dari-oleh" class="block text-sm font-medium text-gray-700 mb-1">Dari Dana</label>
-                                <select id="transfer-dari-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Suami</option><option>Istri</option></select>
+                                <select id="transfer-dari-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200"><option>Suami</option><option>Istri</option></select>
                             </div>
                             <div>
                                 <label for="transfer-ke-oleh" class="block text-sm font-medium text-gray-700 mb-1">Ke Dana</label>
-                                <select id="transfer-ke-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"><option>Istri</option><option>Suami</option></select>
+                                <select id="transfer-ke-oleh" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200"><option>Istri</option><option>Suami</option></select>
                             </div>
                         </div>
-                        <div><label for="transfer-dari" class="block text-sm font-medium text-gray-700 mb-1">Dari Lokasi</label><input type="text" id="transfer-dari" placeholder="Contoh: Bank BCA" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="transfer-ke" class="block text-sm font-medium text-gray-700 mb-1">Ke Lokasi</label><input type="text" id="transfer-ke" placeholder="Contoh: Gopay" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
-                        <div><label for="transfer-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan (Opsional)</label><input type="text" id="transfer-keterangan" placeholder="Contoh: Isi saldo Gopay" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="transfer-dari" class="block text-sm font-medium text-gray-700 mb-1">Dari Lokasi</label>
+                                <input type="text" id="transfer-dari" placeholder="Contoh: Bank BCA" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                            <div>
+                                <label for="transfer-ke" class="block text-sm font-medium text-gray-700 mb-1">Ke Lokasi</label>
+                                <input type="text" id="transfer-ke" placeholder="Contoh: Gopay" required class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="transfer-keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan (Opsional)</label>
+                            <input type="text" id="transfer-keterangan" placeholder="Contoh: Isi saldo Gopay" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 text-sm transition-all duration-200">
+                        </div>
                         <button type="submit" id="transfer-submit-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-[1.02] duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300">Simpan Transfer</button>
                     </form>
                 </div>
@@ -274,18 +384,15 @@
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                             <select id="laporan-bulan" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></select>
                             <select id="laporan-tahun" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></select>
-                            <select id="laporan-urutkan" class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                                <option value="tanggal">Urutkan: Tgl. Transaksi</option>
-                                <option value="createdAt">Urutkan: Tgl. Input</option>
-                            </select>
+                            <!-- Dropdown pengurutan dihapus karena sudah ada pop-up -->
                             <button onclick="generateXLSX()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-all duration-300"><i data-feather="file" class="w-4 h-4"></i><span class="hidden sm:inline">Ekspor Excel</span></button>
                         </div>
                     </div>
                     <div id="laporan-content">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-center">
-                            <div class="bg-green-50/70 p-4 rounded-lg"><p class="text-sm text-green-700">Pemasukan</p><p id="laporan-pemasukan" class="text-lg font-bold text-green-800">Rp 0</p></div>
-                            <div class="bg-red-50/70 p-4 rounded-lg"><p class="text-sm text-red-700">Pengeluaran</p><p id="laporan-pengeluaran" class="text-lg font-bold text-red-800">Rp 0</p></div>
-                            <div class="bg-indigo-50/70 p-4 rounded-lg"><p class="text-sm text-indigo-700">Selisih</p><p id="laporan-selisih" class="text-lg font-bold text-indigo-800">Rp 0</p></div>
+                            <div class="bg-green-100/70 p-4 rounded-lg"><p class="text-sm text-green-700">Pemasukan</p><p id="laporan-pemasukan" class="text-lg font-bold text-green-800">Rp 0</p></div>
+                            <div class="bg-red-100/70 p-4 rounded-lg"><p class="text-sm text-red-700">Pengeluaran</p><p id="laporan-pengeluaran" class="text-lg font-bold text-red-800">Rp 0</p></div>
+                            <div class="bg-sky-100/70 p-4 rounded-lg"><p class="text-sm text-sky-700">Selisih</p><p id="laporan-selisih" class="text-lg font-bold text-sky-800">Rp 0</p></div>
                         </div>
                         <div class="overflow-x-auto">
                             <table id="laporan-tabel-container" class="w-full text-sm text-left text-gray-600">
@@ -340,6 +447,22 @@
         </div>
     </div>
     
+    <div id="report-sort-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 relative animate-scale-in text-center">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Urutkan Laporan Berdasarkan</h3>
+            <p class="text-sm text-gray-600 mb-6">Pilih cara pengurutan data laporan yang Anda inginkan.</p>
+            <div class="flex flex-col gap-4">
+                <button id="sort-by-created-at-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300">
+                    Tanggal Input (Terbaru)
+                </button>
+                <button id="sort-by-tanggal-btn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg transition-all duration-300">
+                    Tanggal Transaksi
+                </button>
+            </div>
+            <button id="close-sort-modal-btn" class="mt-4 text-sm text-gray-500 hover:underline">Batal</button>
+        </div>
+    </div>
+
     <div id="balance-breakdown-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 relative animate-scale-in">
             <button id="close-balance-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i data-feather="x" class="w-6 h-6"></i></button>
@@ -383,12 +506,16 @@
         let financialChart;
         let currentUser = null;
         let unsubscribeFromFirestore = null;
+        let unsubscribeFromGoal = null;
         let chartState = { monthsToShow: 6, offset: 0 };
         let isNewLogin = false;
         let editingTransactionId = null;
         let reportCurrentPage = 1;
         const reportItemsPerPage = 10;
-        
+        let userGoal = 0;
+        let prevSaldo = 0;
+        let reportSortBy = 'createdAt'; // Default sort option
+
         // --- DOM ELEMENTS ---
         const loginPage = document.getElementById('login-page');
         const appContainer = document.getElementById('app-container');
@@ -412,6 +539,21 @@
         const balanceBreakdownModal = document.getElementById('balance-breakdown-modal');
         const closeBalanceModalBtn = document.getElementById('close-balance-modal-btn');
         const balanceBreakdownList = document.getElementById('balance-breakdown-list');
+
+        const motivationalMessageEl = document.getElementById('motivational-message');
+        const challengeMessageEl = document.getElementById('challenge-message');
+        const consistencyTrackerEl = document.getElementById('consistency-tracker');
+        const challengeList = [
+            "Catat semua pengeluaran kecilmu hari ini!",
+            "Tinjau kembali pengeluaran terbesar Anda dalam seminggu terakhir.",
+            "Coba identifikasi satu pengeluaran yang tidak perlu hari ini.",
+            "Tulis satu tujuan keuangan kecil yang ingin Anda capai minggu ini.",
+            "Lakukan pencatatan keuangan dua kali hari ini, pagi dan malam!",
+            "Puji dirimu sendiri atas setiap pencatatan yang sudah kamu lakukan. Kamu hebat!",
+            "Periksa saldo Anda saat ini dan rencanakan langkah selanjutnya.",
+        ];
+        
+        const reportSortModal = document.getElementById('report-sort-modal');
 
         // --- UI FUNCTIONS ---
         const showPopup = (config) => {
@@ -555,6 +697,33 @@
             });
         };
 
+        // Confetti animation
+        const showConfetti = () => {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.style.position = 'fixed';
+            confettiContainer.style.top = '0';
+            confettiContainer.style.left = '0';
+            confettiContainer.style.width = '100vw';
+            confettiContainer.style.height = '100vh';
+            confettiContainer.style.pointerEvents = 'none';
+            confettiContainer.style.zIndex = '9999';
+            document.body.appendChild(confettiContainer);
+
+            const colors = ['#fde047', '#f472b6', '#34d399', '#6366f1'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                confettiContainer.appendChild(confetti);
+            }
+
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 3000);
+        };
+
         // --- AUTH & DATA LOGIC ---
         const setAuthButtonsLoading = (isLoading) => authButtons.forEach(btn => btn.disabled = isLoading);
         const handleLogin = async (e) => {
@@ -599,6 +768,26 @@
             authError.textContent = message; authError.classList.remove('hidden');
         };
         const logOut = () => signOut(auth);
+        
+        const showLogoutConfirmation = () => {
+            showPopup({
+                title: 'Konfirmasi Keluar',
+                message: 'Yakin ingin keluar, Bos?',
+                icon: 'error',
+                buttons: [
+                    {
+                        text: 'Batal',
+                        class: 'bg-gray-200 hover:bg-gray-300 text-gray-800',
+                    },
+                    {
+                        text: 'Ya, Keluar',
+                        class: 'bg-red-600 hover:bg-red-700 text-white',
+                        action: logOut
+                    }
+                ]
+            });
+        };
+
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user; loginPage.classList.add('hidden'); appContainer.classList.remove('hidden');
@@ -609,7 +798,8 @@
                     showPopup({ title: `Selamat Datang, ${userName}!`, message: 'Anda berhasil masuk.', icon: 'success', buttons: [{ text: 'Siap Bos' }] });
                     isNewLogin = false;
                 }
-                listenToTransactions(); initializeUI();
+                listenToTransactions();
+                initializeUI();
             } else {
                 currentUser = null; loginPage.classList.remove('hidden'); appContainer.classList.add('hidden');
                 if (unsubscribeFromFirestore) unsubscribeFromFirestore();
@@ -687,9 +877,16 @@
                     transactionData.createdAt = Timestamp.now();
                     await addDoc(collection(db, 'users', currentUser.uid, 'transactions'), { ...transactionData, tanggal: Timestamp.fromDate(new Date(transactionData.tanggal)) });
                 }
+
+                // Check for new positive balance for confetti animation
+                const currentSaldo = transactions.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0) - transactions.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
+                if (currentSaldo > 0 && prevSaldo <= 0) {
+                    showConfetti();
+                }
+                prevSaldo = currentSaldo;
                 
                 resetInputForms();
-                showPopup({ title: 'Berhasil!', message: 'Data transaksi telah disimpan.', icon: 'success', buttons: [{ text: 'Baiklah', action: () => showPage('laporan') }] });
+                showPopup({ title: 'Berhasil!', message: 'Data transaksi telah disimpan, Bos!', icon: 'success', buttons: [{ text: 'Oke', action: () => showPage('input') }] });
             } catch (error) {
                 console.error("Form submit error:", error);
                 showPopup({ title: 'Gagal Menyimpan', message: 'Terjadi kesalahan. Silakan coba lagi.', icon: 'error', buttons: [{ text: 'Tutup' }] });
@@ -751,10 +948,10 @@
             document.getElementById('pengeluaran-submit-btn').textContent = "Simpan Pengeluaran";
             document.getElementById('transfer-submit-btn').textContent = "Simpan Transfer";
         };
-
+        
         // --- EVENT LISTENERS ---
-        document.getElementById('logout-btn').addEventListener('click', logOut);
-        document.getElementById('logout-btn-mobile').addEventListener('click', logOut);
+        document.getElementById('logout-btn').addEventListener('click', showLogoutConfirmation);
+        document.getElementById('logout-btn-mobile').addEventListener('click', showLogoutConfirmation);
         loginForm.addEventListener('submit', handleLogin);
         registerForm.addEventListener('submit', handleRegister);
         showRegisterBtn.addEventListener('click', () => toggleAuthForms('register'));
@@ -790,11 +987,26 @@
         closeBalanceModalBtn.addEventListener('click', closeBalanceModal);
         balanceBreakdownModal.addEventListener('click', e => { if (e.target === balanceBreakdownModal) closeBalanceModal(); });
         
+        document.getElementById('sort-by-created-at-btn').addEventListener('click', () => {
+            reportSortBy = 'createdAt';
+            reportSortModal.classList.add('hidden');
+            renderLaporan();
+        });
+        document.getElementById('sort-by-tanggal-btn').addEventListener('click', () => {
+            reportSortBy = 'tanggal';
+            reportSortModal.classList.add('hidden');
+            renderLaporan();
+        });
+        document.getElementById('close-sort-modal-btn').addEventListener('click', () => reportSortModal.classList.add('hidden'));
+
         // --- Rendering Functions ---
         const pages = document.querySelectorAll('.page'); const navBtns = document.querySelectorAll('.nav-btn'); const bottomNavBtns = document.querySelectorAll('.bottom-nav-btn');
         const showPage = (pageId) => {
             pages.forEach(p => p.classList.add('hidden'));
-            document.getElementById(pageId + '-page').classList.remove('hidden');
+            const currentPageEl = document.getElementById(pageId + '-page');
+            if (currentPageEl) {
+                currentPageEl.classList.remove('hidden');
+            }
             
             const setActive = (btns) => {
                  btns.forEach(btn => btn.classList.remove('active'));
@@ -805,8 +1017,9 @@
             setActive(bottomNavBtns);
 
             if (pageId === 'laporan') {
-                reportCurrentPage = 1;
-                renderLaporan();
+                reportSortModal.classList.remove('hidden');
+            } else {
+                reportSortModal.classList.add('hidden');
             }
             if (pageId !== 'input' || !editingTransactionId) resetInputForms();
         };
@@ -819,14 +1032,92 @@
             });
         };
         const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
+        
+        // Function to render the consistency tracker
+        const renderConsistencyTracker = () => {
+            if (!currentUser) return;
+            consistencyTrackerEl.innerHTML = '';
+            
+            const daysInWeek = 7;
+            const now = new Date();
+            const daysData = {};
+
+            // Initialize all days of the last week to false
+            for (let i = 0; i < daysInWeek; i++) {
+                const date = new Date(now);
+                date.setDate(now.getDate() - i);
+                const dateString = date.toISOString().split('T')[0];
+                daysData[dateString] = false;
+            }
+
+            // Check if there are transactions for each day
+            transactions.forEach(t => {
+                if (t.createdAt) { // Add null check for createdAt
+                    const dateString = t.createdAt.toISOString().split('T')[0];
+                    if (daysData[dateString] !== undefined) {
+                        daysData[dateString] = true;
+                    }
+                }
+            });
+
+            // Render the UI
+            Object.keys(daysData).sort().forEach(dateString => {
+                const date = new Date(dateString);
+                const dayName = date.toLocaleDateString('id-ID', { weekday: 'short' });
+                const hasEntry = daysData[dateString];
+                const dayDiv = document.createElement('div');
+                dayDiv.className = `flex flex-col items-center flex-1 space-y-1 p-2 rounded-lg transition-all duration-300 ${hasEntry ? 'bg-indigo-200' : 'bg-gray-200'}`;
+                dayDiv.innerHTML = `<span class="text-xs font-medium">${dayName}</span>
+                                    <span class="text-xs ${hasEntry ? 'text-indigo-800' : 'text-gray-500'}">${hasEntry ? '✓' : '—'}</span>`;
+                consistencyTrackerEl.appendChild(dayDiv);
+            });
+        };
+        
+        // Function to set a random daily challenge
+        const setDailyChallenge = () => {
+            const today = new Date().toDateString();
+            const lastChallengeDay = localStorage.getItem('lastChallengeDay');
+            const lastChallengeIndex = localStorage.getItem('lastChallengeIndex');
+
+            let challengeIndex = 0;
+            if (lastChallengeDay === today && lastChallengeIndex !== null) {
+                challengeIndex = parseInt(lastChallengeIndex, 10);
+            } else {
+                challengeIndex = Math.floor(Math.random() * challengeList.length);
+                localStorage.setItem('lastChallengeDay', today);
+                localStorage.setItem('lastChallengeIndex', challengeIndex);
+            }
+            challengeMessageEl.textContent = challengeList[challengeIndex];
+        };
+
         const renderDashboard = () => {
             const totalPemasukan = transactions.filter(t => t.type === 'pemasukan').reduce((s, t) => s + t.jumlah, 0);
             const totalPengeluaran = transactions.filter(t => t.type === 'pengeluaran').reduce((s, t) => s + t.jumlah, 0);
+            const currentSaldo = totalPemasukan - totalPengeluaran;
             document.getElementById('total-pemasukan').textContent = formatRupiah(totalPemasukan);
             document.getElementById('total-pengeluaran').textContent = formatRupiah(totalPengeluaran);
-            document.getElementById('saldo-saat-ini').textContent = formatRupiah(totalPemasukan - totalPengeluaran);
+            document.getElementById('saldo-saat-ini').textContent = formatRupiah(currentSaldo);
+            
+            // Set motivational message
+            if (currentSaldo > 0) {
+                motivationalMessageEl.textContent = "Kerja bagus! Keuanganmu dalam kondisi baik bulan ini. Pertahankan!";
+                motivationalMessageEl.classList.remove('text-red-600', 'text-gray-700');
+                motivationalMessageEl.classList.add('text-green-600');
+            } else if (currentSaldo < 0) {
+                motivationalMessageEl.textContent = "Tetap semangat! Mari kita perbaiki pengeluaran bulan ini.";
+                motivationalMessageEl.classList.remove('text-green-600', 'text-gray-700');
+                motivationalMessageEl.classList.add('text-red-600');
+            } else {
+                motivationalMessageEl.textContent = "Keuanganmu seimbang. Mari mulai menabung bulan ini!";
+                 motivationalMessageEl.classList.remove('text-green-600', 'text-red-600');
+                motivationalMessageEl.classList.add('text-gray-700');
+            }
+
+            setDailyChallenge();
+            renderConsistencyTracker();
             
             const recentList = document.getElementById('recent-transactions-list'); recentList.innerHTML = '';
+            // Mengurutkan transaksi berdasarkan createdAt (waktu input) secara menurun
             const sortedForRecent = transactions.slice().sort((a, b) => (b.createdAt || b.tanggal) - (a.createdAt || a.tanggal));
 
             if (transactions.length === 0) { recentList.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada aktivitas.</p>`; return; }
@@ -870,14 +1161,13 @@
         const renderLaporan = () => {
             const bulan = document.getElementById('laporan-bulan').value; 
             const tahun = document.getElementById('laporan-tahun').value;
-            const sortBy = document.getElementById('laporan-urutkan').value;
             
             let filtered = transactions
                 .filter(t => t.tanggal.getMonth() == bulan && t.tanggal.getFullYear() == tahun);
 
             filtered.sort((a, b) => {
-                const dateA = sortBy === 'createdAt' ? a.createdAt || a.tanggal : a.tanggal;
-                const dateB = sortBy === 'createdAt' ? b.createdAt || b.tanggal : b.tanggal;
+                const dateA = reportSortBy === 'createdAt' ? a.createdAt || a.tanggal : a.tanggal;
+                const dateB = reportSortBy === 'createdAt' ? b.createdAt || b.tanggal : b.tanggal;
                 return dateB - dateA;
             });
 
@@ -902,7 +1192,8 @@
                 
                 let keterangan, tipe, jumlah, tanggal;
 
-                tanggal = `<span>${t.tanggal.toLocaleDateString('id-ID')}</span><small class="text-gray-400 block">${t.createdAt ? t.createdAt.toLocaleString('id-ID', {hour: '2-digit', minute: '2-digit'}) : ''}</small>`;
+                const time = t.createdAt ? t.createdAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '.' + String(t.createdAt.getMilliseconds()).padStart(3, '0') : '';
+                tanggal = `<span>${t.tanggal.toLocaleDateString('id-ID')}</span><small class="text-gray-400 block">${time}</small>`;
 
                 if (t.type === 'transfer') {
                     keterangan = `<span>Transfer: <b>${t.dari}</b> (${t.dariOleh}) → <b>${t.ke}</b> (${t.keOleh})</span> ${t.keterangan ? `<small class="text-gray-500">${t.keterangan}</small>` : ''}`;
@@ -997,7 +1288,6 @@
         const setupLaporanFilters = () => {
             const bulanSelect = document.getElementById('laporan-bulan'); 
             const tahunSelect = document.getElementById('laporan-tahun');
-            const urutkanSelect = document.getElementById('laporan-urutkan');
 
             if(bulanSelect.options.length > 1) return; 
             ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"].forEach((n, i) => { const o = document.createElement('option'); o.value = i; o.textContent = n; bulanSelect.appendChild(o); });
@@ -1008,7 +1298,6 @@
             const renderTrigger = () => { reportCurrentPage = 1; renderLaporan(); };
             bulanSelect.addEventListener('change', renderTrigger);
             tahunSelect.addEventListener('change', renderTrigger);
-            urutkanSelect.addEventListener('change', renderTrigger);
         };
         const renderAll = () => { renderDashboard(); renderChart(); if (!document.getElementById('laporan-page').classList.contains('hidden')) renderLaporan(); };
         const initializeUI = () => {
@@ -1024,7 +1313,7 @@
             let detailsHtml = `<p><strong class="font-medium text-gray-500 w-28 inline-block">Jumlah:</strong> <span class="font-bold ${t.type === 'pemasukan' ? 'text-green-600' : t.type === 'pengeluaran' ? 'text-red-600' : 'text-blue-600'}">${formatRupiah(t.jumlah)}</span></p>
                              <p><strong class="font-medium text-gray-500 w-28 inline-block">Tanggal:</strong> ${t.tanggal.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p>`;
             if (t.createdAt) {
-                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Waktu Input:</strong> ${t.createdAt.toLocaleString('id-ID')}</p>`;
+                detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Waktu Input:</strong> ${t.createdAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + '.' + String(t.createdAt.getMilliseconds()).padStart(3, '0')}</p>`;
             }
             if (t.type === 'pemasukan') {
                 detailsHtml += `<p><strong class="font-medium text-gray-500 w-28 inline-block">Oleh:</strong> ${t.oleh}</p>`;
