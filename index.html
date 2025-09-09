@@ -221,12 +221,18 @@
                     <div class="flex justify-between items-center mb-3">
                         <h2 class="text-lg font-bold text-indigo-600">Tantangan Positif Hari Ini</h2>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="p-3 bg-indigo-100 rounded-full"><i data-feather="award" class="w-6 h-6 text-indigo-600"></i></div>
-                        <div>
-                            <p id="challenge-message" class="text-sm text-gray-700">Tantangan harianmu akan muncul di sini!</p>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 sm:space-x-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="p-3 bg-indigo-100 rounded-full"><i data-feather="award" class="w-6 h-6 text-indigo-600"></i></div>
+                            <div>
+                                <p id="challenge-message" class="text-sm font-medium text-gray-700">Tantangan harianmu akan muncul di sini!</p>
+                            </div>
                         </div>
+                        <button id="challenge-complete-btn" class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2 px-4 rounded-full transition-colors duration-200" style="display: none;">
+                            Selesai!
+                        </button>
                     </div>
+                    <p id="challenge-count" class="text-xs text-gray-500 mt-4">Anda telah menyelesaikan 0 tantangan.</p>
                 </div>
                 <!-- End New -->
 
@@ -515,6 +521,7 @@
         let userGoal = 0;
         let prevSaldo = 0;
         let reportSortBy = 'createdAt'; // Default sort option
+        let completedChallenges = 0; // New state for challenges
 
         // --- DOM ELEMENTS ---
         const loginPage = document.getElementById('login-page');
@@ -543,6 +550,9 @@
         const motivationalMessageEl = document.getElementById('motivational-message');
         const challengeMessageEl = document.getElementById('challenge-message');
         const consistencyTrackerEl = document.getElementById('consistency-tracker');
+        const challengeCompleteBtn = document.getElementById('challenge-complete-btn');
+        const challengeCountEl = document.getElementById('challenge-count');
+
         const challengeList = [
             "Catat semua pengeluaran kecilmu hari ini!",
             "Tinjau kembali pengeluaran terbesar Anda dalam seminggu terakhir.",
@@ -788,6 +798,15 @@
             });
         };
 
+        const completeChallenge = () => {
+            localStorage.setItem('challengeCompletedToday', 'true');
+            let count = parseInt(localStorage.getItem('completedChallenges') || '0', 10);
+            count++;
+            localStorage.setItem('completedChallenges', count);
+            renderDashboard();
+            showPopup({ title: 'Tantangan Selesai!', message: 'Anda berhasil menyelesaikan tantangan hari ini. Hebat!', icon: 'success', buttons: [{ text: 'OK' }] });
+        };
+
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user; loginPage.classList.add('hidden'); appContainer.classList.remove('hidden');
@@ -998,6 +1017,8 @@
             renderLaporan();
         });
         document.getElementById('close-sort-modal-btn').addEventListener('click', () => reportSortModal.classList.add('hidden'));
+        challengeCompleteBtn.addEventListener('click', completeChallenge);
+
 
         // --- Rendering Functions ---
         const pages = document.querySelectorAll('.page'); const navBtns = document.querySelectorAll('.nav-btn'); const bottomNavBtns = document.querySelectorAll('.bottom-nav-btn');
@@ -1077,17 +1098,26 @@
         const setDailyChallenge = () => {
             const today = new Date().toDateString();
             const lastChallengeDay = localStorage.getItem('lastChallengeDay');
-            const lastChallengeIndex = localStorage.getItem('lastChallengeIndex');
+            let lastChallengeIndex = localStorage.getItem('lastChallengeIndex');
+            const challengeCompletedToday = localStorage.getItem('challengeCompletedToday') === 'true' && lastChallengeDay === today;
 
-            let challengeIndex = 0;
-            if (lastChallengeDay === today && lastChallengeIndex !== null) {
-                challengeIndex = parseInt(lastChallengeIndex, 10);
-            } else {
-                challengeIndex = Math.floor(Math.random() * challengeList.length);
+            if (lastChallengeDay !== today) {
+                lastChallengeIndex = Math.floor(Math.random() * challengeList.length);
                 localStorage.setItem('lastChallengeDay', today);
-                localStorage.setItem('lastChallengeIndex', challengeIndex);
+                localStorage.setItem('lastChallengeIndex', lastChallengeIndex);
+                localStorage.setItem('challengeCompletedToday', 'false');
             }
-            challengeMessageEl.textContent = challengeList[challengeIndex];
+            
+            challengeMessageEl.textContent = challengeList[lastChallengeIndex];
+            if (challengeCompletedToday) {
+                challengeCompleteBtn.style.display = 'none';
+                challengeMessageEl.textContent += " (Tantangan Selesai!)";
+            } else {
+                challengeCompleteBtn.style.display = 'inline-block';
+            }
+
+            const count = parseInt(localStorage.getItem('completedChallenges') || '0', 10);
+            challengeCountEl.textContent = `Anda telah menyelesaikan ${count} tantangan.`;
         };
 
         const renderDashboard = () => {
